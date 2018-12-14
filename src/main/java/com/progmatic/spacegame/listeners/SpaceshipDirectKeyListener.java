@@ -6,7 +6,8 @@
 package com.progmatic.spacegame.listeners;
 
 import com.progmatic.spacegame.MainGameFrame;
-import com.progmatic.spacegame.components.Spaceship;
+import com.progmatic.spacegame.spaceobjects.Bullet;
+import com.progmatic.spacegame.spaceobjects.Spaceship;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -26,7 +27,8 @@ public class SpaceshipDirectKeyListener implements KeyListener {
 
     private final Spaceship spaceship;
     private int move = 20;
-    private final Set<Integer> pressedKeys = new HashSet<>();
+    private final Set<Integer> pressedNavKeys = new HashSet<>();
+    private static final Set<Integer> arrowKeys = new HashSet<>();
     private Dimension mainFrameDimensions;
     private final MainGameFrame gameFrame;
 
@@ -34,13 +36,20 @@ public class SpaceshipDirectKeyListener implements KeyListener {
 
     Timer spMoveTimer;
 
+    static {
+        arrowKeys.add(KeyEvent.VK_UP);
+        arrowKeys.add(KeyEvent.VK_DOWN);
+        arrowKeys.add(KeyEvent.VK_LEFT);
+        arrowKeys.add(KeyEvent.VK_RIGHT);
+    }
+
     public SpaceshipDirectKeyListener(Spaceship spaceship, Dimension mDimension, MainGameFrame mainGameFrame) {
         this.spaceship = spaceship;
         this.mainFrameDimensions = mDimension;
         spMoveTimer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Integer pressedKey : pressedKeys) {
+                for (Integer pressedKey : pressedNavKeys) {
                     moveByKey(pressedKey);
                 }
             }
@@ -111,14 +120,20 @@ public class SpaceshipDirectKeyListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        gameFrame.initializeIfNeeded();
+        int keyCode = e.getKeyCode();
         if (e.isActionKey()) {
-            gameFrame.addPlanetsIfNeeded();
-            int keyCode = e.getKeyCode();
-            pressedKeys.add(keyCode);
-            if (!spMoveTimer.isRunning()) {
-                spMoveTimer.start();
+
+            if (arrowKeys.contains(keyCode)) {
+                pressedNavKeys.add(keyCode);
+                if (!spMoveTimer.isRunning()) {
+                    spMoveTimer.start();
+                }
             }
 
+        } else if (keyCode == 32) {
+            Bullet bullet = spaceship.fireBullet();
+            gameFrame.addBullet(bullet);
         }
 
     }
@@ -127,9 +142,9 @@ public class SpaceshipDirectKeyListener implements KeyListener {
     public void keyReleased(KeyEvent e) {
         if (e.isActionKey()) {
             int keyCode = e.getKeyCode();
-            pressedKeys.remove(keyCode);
+            pressedNavKeys.remove(keyCode);
         }
-        if (pressedKeys.isEmpty()) {
+        if (pressedNavKeys.isEmpty()) {
             spMoveTimer.stop();
         }
     }

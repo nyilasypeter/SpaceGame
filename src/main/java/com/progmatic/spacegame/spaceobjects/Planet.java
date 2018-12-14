@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.progmatic.spacegame.components;
+package com.progmatic.spacegame.spaceobjects;
 
 import com.progmatic.spacegame.SpaceObjectState;
 import java.awt.BasicStroke;
@@ -12,8 +12,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Arc2D;
 import java.util.Random;
 import javax.swing.Timer;
 
@@ -21,7 +23,7 @@ import javax.swing.Timer;
  *
  * @author peti
  */
-public class Planet extends SpaceObject {
+public class Planet extends SpaceObject implements Hitable{
 
     private final Random r = new Random();
     private final int diameter;
@@ -38,7 +40,7 @@ public class Planet extends SpaceObject {
     private final int maxRepeatNr = 15;
     private final int nrOfPieces = 10;
 
-    private final int planetAnimationSpeed ;
+    private final int planetAnimationSpeed;
 
     private int agonize;
 
@@ -46,7 +48,7 @@ public class Planet extends SpaceObject {
 
         this.diameter = r.nextInt(250) + 30;
         this.explodedDiameter = diameter + 50;
-        this.planetAnimationSpeed = r.nextInt(10)+10;
+        this.planetAnimationSpeed = r.nextInt(10) + 10;
         this.strokesize = r.nextInt(10) + 3;
         this.color = randomColor();
         this.nrOfExtraCircles = r.nextInt(6) + 1;
@@ -139,8 +141,8 @@ public class Planet extends SpaceObject {
         t = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                repeatNr++;
                 Point absCenter = getAbsoluteCenter();
+                repeatNr++;
                 int actDiameter = diameter + calcExplodedCenterDistance() * 2 + strokesize * 2;
                 setBoundsAroundCenter(absCenter, actDiameter, actDiameter);
                 repaint();
@@ -161,10 +163,11 @@ public class Planet extends SpaceObject {
         startToExplode();
     }
 
+    @Override
     public Point getRelativeCenter() {
         int actDiameter = diameter;
         if (state.equals(SpaceObjectState.AGOZNIZING)) {
-            actDiameter = diameter + calcExplodedCenterDistance() * 2 + strokesize * 2;
+            actDiameter = diameter + calcExplodedCenterDistance() * 2;
         }
 
         int centerX = actDiameter / 2 + strokesize;
@@ -173,13 +176,8 @@ public class Planet extends SpaceObject {
         return p;
     }
 
-    public Point getAbsoluteCenter() {
-        Rectangle bounds = getBounds();
-        Point relativeCenter = getRelativeCenter();
-        Point p = new Point(bounds.x + relativeCenter.x, bounds.y + relativeCenter.y);
-        return p;
-    }
 
+    @Override
     public int getComponentWidth() {
         if (state.equals(SpaceObjectState.AGOZNIZING)) {
             return (explodedDiameter + strokesize * 2);
@@ -187,6 +185,7 @@ public class Planet extends SpaceObject {
         return (diameter + strokesize * 2);
     }
 
+    @Override
     public int getComponentHeight() {
         return getComponentWidth();
     }
@@ -223,5 +222,19 @@ public class Planet extends SpaceObject {
         setBounds(bounds.x - planetAnimationSpeed, bounds.getBounds().y, getComponentWidth(), getComponentHeight());
 
     }
+
+    @Override
+    public Shape getApproximationShape() {
+        Shape sh = new Arc2D.Double(getBounds(), 0, 360, Arc2D.Double.CHORD);
+        return sh;
+    }
+
+    @Override
+    public void beingHit() {
+        this.state = SpaceObjectState.AGOZNIZING;
+        startToExplode();
+    }
+    
+    
 
 }

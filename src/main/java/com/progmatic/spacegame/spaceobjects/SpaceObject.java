@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.progmatic.spacegame.components;
+package com.progmatic.spacegame.spaceobjects;
 
 import com.progmatic.spacegame.SpaceObjectState;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import javax.swing.JComponent;
 
 /**
@@ -21,8 +23,10 @@ public abstract class SpaceObject extends JComponent {
     public abstract int getComponentWidth();
 
     public abstract int getComponentHeight();
-    
+
     public abstract void move();
+    
+    public abstract Shape getApproximationShape();
 
     protected void paintCircleAorundPoint(int x, int y, int diameter, Graphics g) {
         paintCircleAorundPoint(x, y, diameter, false, g);
@@ -54,9 +58,20 @@ public abstract class SpaceObject extends JComponent {
 
         }
     }
+
+    public Point getAbsoluteCenter() {
+        Rectangle bounds = getBounds();
+        Point relativeCenter = getRelativeCenter();
+        Point p = new Point(bounds.x + relativeCenter.x, bounds.y + relativeCenter.y);
+        return p;
+    }
     
-    protected void setBoundsAroundCenter(Point center, int width, int height){
-        setBounds(center.x-(width/2), center.y-(height/2), width, height);
+    protected Point getRelativeCenter(){
+        return null;
+    }
+
+    protected void setBoundsAroundCenter(Point center, int width, int height) {
+        setBounds(center.x - (width / 2), center.y - (height / 2), width, height);
     }
 
     public SpaceObjectState getState() {
@@ -70,5 +85,7 @@ public abstract class SpaceObject extends JComponent {
     public void handleCollision() {
 
     }
+    
+    
 
 }

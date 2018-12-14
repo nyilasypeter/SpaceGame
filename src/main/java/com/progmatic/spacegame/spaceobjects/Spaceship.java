@@ -3,19 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.progmatic.spacegame.components;
+package com.progmatic.spacegame.spaceobjects;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Arc2D;
 
 /**
  *
  * @author peti
  */
-public class Spaceship extends SpaceObject {
+public class Spaceship extends SpaceObject implements Hitable{
     
     private static final Color WINDOW_COLOR_ALIVE = Color.decode("#e9f409");//#f3ff00
     private static final Color WINDOW_COLOR_DEAD = Color.BLACK;
@@ -85,7 +87,7 @@ public class Spaceship extends SpaceObject {
         }
     }
 
-    private Point getMyCenter() {
+    public Point getMyCenter() {
         Rectangle bounds = getBounds();
         Point ret = new Point(bounds.x + 50, bounds.y + 50);
         return ret;
@@ -106,6 +108,23 @@ public class Spaceship extends SpaceObject {
     @Override
     public void handleCollision() {
         life--;
+    }
+    
+    public Bullet fireBullet(){
+        Bullet b = new Bullet();
+        Rectangle myBounds = getBounds();
+        b.setBounds(myBounds.x + getComponentWidth() + 10, myBounds.y + 70, b.getComponentWidth(), b.getComponentHeight());
+        return b;
+    }
+
+    @Override
+    public Shape getApproximationShape() {
+        return new Arc2D.Double(getBounds(), 0, 360, Arc2D.Double.CHORD);
+    }
+
+    @Override
+    public void beingHit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     
