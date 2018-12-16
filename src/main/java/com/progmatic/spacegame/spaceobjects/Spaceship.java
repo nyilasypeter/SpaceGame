@@ -5,6 +5,11 @@
  */
 package com.progmatic.spacegame.spaceobjects;
 
+import com.progmatic.spacegame.spaceobjects.gifts.Gift;
+import com.progmatic.spacegame.spaceobjects.projectile.Bullet;
+import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
+import com.progmatic.spacegame.spaceobjects.projectile.Missile;
+import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,13 +22,14 @@ import java.awt.geom.Arc2D;
  *
  * @author peti
  */
-public class Spaceship extends SpaceObject implements Hitable{
-    
+public class Spaceship extends SpaceObject implements Hitable {
+
     private static final Color WINDOW_COLOR_ALIVE = Color.decode("#e9f409");//#f3ff00
     private static final Color WINDOW_COLOR_DEAD = Color.BLACK;
-    
-    private int life = 4;
 
+    private int life = 4;
+    private int nrOfMissiles = 4;
+    private int score = 0;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -37,7 +43,7 @@ public class Spaceship extends SpaceObject implements Hitable{
         g.setColor(WINDOW_COLOR_ALIVE);
         int windowStart = 15;
         for (int i = 0; i < 4; i++) {
-            if(i>=life){
+            if (i >= life) {
                 g.setColor(WINDOW_COLOR_DEAD);
             }
             g.fillOval(windowStart, 60, 10, 10);
@@ -106,15 +112,35 @@ public class Spaceship extends SpaceObject implements Hitable{
     }
 
     @Override
-    public void handleCollision() {
-        life--;
+    public void handleCollision(SpaceObject other) {
+        if(other instanceof Planet){
+            life--;
+        }
+        else if(other instanceof Gift){
+            Gift g = (Gift) other;
+            score+= g.getValue();
+        }
     }
-    
-    public Bullet fireBullet(){
+
+    public Projectile fireBullet() {
+
         Bullet b = new Bullet();
         Rectangle myBounds = getBounds();
         b.setBounds(myBounds.x + getComponentWidth() + 10, myBounds.y + 70, b.getComponentWidth(), b.getComponentHeight());
         return b;
+
+    }
+
+    public Projectile fireMissile() {
+        nrOfMissiles--;
+        if (nrOfMissiles >= 0) {
+            Missile m = new Missile();
+            Rectangle myBounds = getBounds();
+            m.setBounds(myBounds.x + getComponentWidth() + 10, myBounds.y + 70, m.getComponentWidth(), m.getComponentHeight());
+            return m;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -123,9 +149,22 @@ public class Spaceship extends SpaceObject implements Hitable{
     }
 
     @Override
-    public void beingHit() {
+    public void beingHit(int damage) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getNrOfMissiles() {
+        return Math.max(0, nrOfMissiles);
+    }
+
+    public void setNrOfMissiles(int nrOfMissiles) {
+        this.nrOfMissiles = nrOfMissiles;
+    }
+
+    public int getScore() {
+        return score;
     }
     
     
+
 }

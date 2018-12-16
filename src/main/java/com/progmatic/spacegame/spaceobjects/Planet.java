@@ -5,7 +5,10 @@
  */
 package com.progmatic.spacegame.spaceobjects;
 
+import com.progmatic.spacegame.MainGameFrame;
+import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.SpaceObjectState;
+import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -23,7 +26,7 @@ import javax.swing.Timer;
  *
  * @author peti
  */
-public class Planet extends SpaceObject implements Hitable{
+public class Planet extends SpaceObject implements Hitable {
 
     private final Random r = new Random();
     private final int diameter;
@@ -32,6 +35,8 @@ public class Planet extends SpaceObject implements Hitable{
     private final int nrOfExtraCircles;
     private final boolean[] isFilledCircle;
     private final Color[] extraCircleColors;
+    private int bulletResistance;
+    private final MainGameFrame mainGameFrame;
 
     private int repeatNr = 0;
     private Timer t;
@@ -44,9 +49,10 @@ public class Planet extends SpaceObject implements Hitable{
 
     private int agonize;
 
-    public Planet() {
-
+    public Planet(MainGameFrame mainGameFrame) {
+        this.mainGameFrame = mainGameFrame;
         this.diameter = r.nextInt(250) + 30;
+        this.bulletResistance = (diameter / 50) + 2;
         this.explodedDiameter = diameter + 50;
         this.planetAnimationSpeed = r.nextInt(10) + 10;
         this.strokesize = r.nextInt(10) + 3;
@@ -147,18 +153,30 @@ public class Planet extends SpaceObject implements Hitable{
                 setBoundsAroundCenter(absCenter, actDiameter, actDiameter);
                 repaint();
                 if (repeatNr >= maxRepeatNr) {
-                    repeatNr = -1;
+                    //repeatNr = -1;
                     repaint();
                     t.stop();
+                    showGift();
                     state = SpaceObjectState.DEAD;
                 }
             }
         });
         t.start();
     }
+    
+    private void showGift(){
+        Gold gold = new Gold();
+        Point center = getAbsoluteCenter();
+        gold.setBounds(
+                center.x-gold.getComponentWidth()/2, 
+                center.y-gold.getComponentHeight()/2, 
+                gold.getComponentWidth(), 
+                gold.getComponentHeight());
+        mainGameFrame.addGift(gold);
+    }
 
     @Override
-    public void handleCollision() {
+    public void handleCollision(SpaceObject other) {
         this.state = SpaceObjectState.AGOZNIZING;
         startToExplode();
     }
@@ -175,7 +193,6 @@ public class Planet extends SpaceObject implements Hitable{
         Point p = new Point(centerX, centery);
         return p;
     }
-
 
     @Override
     public int getComponentWidth() {
@@ -230,11 +247,12 @@ public class Planet extends SpaceObject implements Hitable{
     }
 
     @Override
-    public void beingHit() {
-        this.state = SpaceObjectState.AGOZNIZING;
-        startToExplode();
+    public void beingHit(int damage) {
+        bulletResistance-=damage;
+        if (bulletResistance <= 0) {
+            this.state = SpaceObjectState.AGOZNIZING;
+            startToExplode();
+        }
     }
-    
-    
 
 }

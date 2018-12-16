@@ -3,21 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.progmatic.spacegame.spaceobjects;
+package com.progmatic.spacegame.spaceobjects.enemy;
 
+import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Arc2D;
 import javax.swing.Timer;
 
 /**
  *
  * @author peti
  */
-public class Exploder extends SpaceObject {
+public class GrowShrinkStar extends SpaceObject {
 
     private int repeatNr = 0;
     private Timer t;
@@ -35,21 +37,20 @@ public class Exploder extends SpaceObject {
         g.setColor(Color.CYAN);
         if (repeatNr == 0) {
             paintCircleAorundPoint(50, 50, diameter, true, g);
-
         } else if (repeatNr == -1) {
 
         } else {
+            int actDiameter = calcExplodedDiameter();
             int centerDist = calcExplodedCenterDistance();
             int startAngle = 0;
-            int angleGrow = 360 / nrOfPieces;
-            int swingStartAngle = 108;
             for (int i = 0; i < nrOfPieces; i++) {
                 Point cp = calcCenterOfPiece(center, centerDist, startAngle);
-                paintArcAorundPoint(cp.x, cp.y, diameter, swingStartAngle, -1 * angleGrow, true, g);
-                startAngle += angleGrow;
-                swingStartAngle -= angleGrow;
+
+                paintArcAorundPoint(cp.x, cp.y, diameter, startAngle, 36, true, g);
+                startAngle += 36;
 
             }
+            //paintCircleAorundPoint(50, 50, diameter, true, g);
         }
 
     }
@@ -90,7 +91,7 @@ public class Exploder extends SpaceObject {
     private Point calcCenterOfPiece(Point center, int distance, double angle) {
         int x = (int) (Math.sin(Math.toRadians(angle)) * distance);
         int y = (int) (Math.cos(Math.toRadians(angle)) * distance);
-        return new Point(center.x + x, center.y - y);
+        return new Point(center.x + x, center.y + y);
     }
 
     private int calcExplodedDiameter() {
@@ -111,11 +112,15 @@ public class Exploder extends SpaceObject {
 
     @Override
     public void move() {
+    
     }
 
     @Override
     public Shape getApproximationShape() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new Arc2D.Double(getBounds(), 0, 360, Arc2D.Double.CHORD);
     }
+
+    
+   
 
 }

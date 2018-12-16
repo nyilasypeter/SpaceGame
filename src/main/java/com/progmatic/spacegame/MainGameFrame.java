@@ -5,24 +5,24 @@
  */
 package com.progmatic.spacegame;
 
-import com.progmatic.spacegame.spaceobjects.Blinker;
-import com.progmatic.spacegame.spaceobjects.Bullet;
+import com.progmatic.spacegame.infoobjects.InfoObject;
+import com.progmatic.spacegame.spaceobjects.enemy.Blinker;
 import com.progmatic.spacegame.utils.CollisionChecker;
-import com.progmatic.spacegame.spaceobjects.Exploder;
-import com.progmatic.spacegame.spaceobjects.GrowShrinkStar;
-import com.progmatic.spacegame.spaceobjects.Hitable;
+import com.progmatic.spacegame.spaceobjects.enemy.Exploder;
+import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
+import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
 import com.progmatic.spacegame.spaceobjects.Planet;
-import com.progmatic.spacegame.spaceobjects.Projectile;
+import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.listeners.MainFrameComponentListener;
 import com.progmatic.spacegame.listeners.SpaceshipDirectKeyListener;
+import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Shape;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +40,8 @@ public class MainGameFrame extends JFrame {
     private Spaceship sp;
 
     private List<SpaceObject> spaceObjects = Collections.synchronizedList(new ArrayList<>());
-    private Timer planetAnimator;
+    private InfoObject infoObject;
+    private Timer mainAnimator;
     private boolean initialized = false;
 
     /**
@@ -68,7 +69,6 @@ public class MainGameFrame extends JFrame {
     public void addSpaceShip() {
         sp = new Spaceship();
         sp.setBounds(100, 100, sp.getComponentWidth(), sp.getComponentHeight());
-        sp.setVisible(true);
         add(sp);
         SpaceshipDirectKeyListener skListener = new SpaceshipDirectKeyListener(sp, getContentPane().getSize(), this);
         addKeyListener(skListener);
@@ -98,9 +98,14 @@ public class MainGameFrame extends JFrame {
         b.startToExplode();
     }
 
-    public void addBullet(Bullet b) {
+    public void addBullet(Projectile b) {
         add(b);
         spaceObjects.add(b);
+    }
+    
+    public void addGift(Gift gift){
+        add(gift);
+        spaceObjects.add(gift);
     }
 
     public void initializeIfNeeded() {
@@ -109,40 +114,55 @@ public class MainGameFrame extends JFrame {
             for (int i = 0; i < 6; i++) {
                 spaceObjects.add(createRandomPlanet());
             }
-            planetAnimator = new Timer(20, new ActionListener() {
+            mainAnimator = new Timer(20, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ListIterator<SpaceObject> li = spaceObjects.listIterator();
-                    while (li.hasNext()) {
-                        SpaceObject so = li.next();
-                        if (so.getBounds().x < 0 - so.getWidth()) {
-                            li.remove();
-                            li.add(createRandomPlanet());
-
-                        } else {
-                            if (so.getState().equals(SpaceObjectState.ALIVE)) {
-                                so.move();
-                                if (CollisionChecker.collided(so, sp)) {
-                                    so.handleCollision();
-                                    sp.handleCollision();
-                                }
-                                checkHit(so);
-                            } else if (so.getState().equals(SpaceObjectState.DEAD)) {
-                                remove(so);
-                                repaint();
-                                li.remove();
-                                if (so instanceof Planet) {
-                                    li.add(createRandomPlanet());
-                                }
-                            }
-
-                        }
-                    }
+                    mainTimerFired();
                 }
+
             });
-            planetAnimator.start();
+            mainAnimator.start();
+
+            Rectangle frameBounds = getBounds();
+            infoObject = new InfoObject(sp);
+            System.out.println(frameBounds.width);
+            add(infoObject);
+            infoObject.setBounds(frameBounds.width - 200, 30, 200, 200);
+            infoObject.refresh();
+            infoObject.repaint();
         }
 
+    }
+
+    private void mainTimerFired() {
+        ListIterator<SpaceObject> li = spaceObjects.listIterator();
+        while (li.hasNext()) {
+            SpaceObject so = li.next();
+            if (so.getBounds().x < 0 - so.getWidth()) {
+                li.remove();
+                li.add(createRandomPlanet());
+
+            } else {
+                if (so.getState().equals(SpaceObjectState.ALIVE)) {
+                    so.move();
+                    if (CollisionChecker.collided(so, sp)) {
+                        so.handleCollision(sp);
+                        sp.handleCollision(so);
+                    }
+                    checkHit(so);
+                } else if (so.getState().equals(SpaceObjectState.DEAD)) {
+                    remove(so);
+                    repaint();
+                    li.remove();
+                    if (so instanceof Planet) {
+                        li.add(createRandomPlanet());
+                    }
+                }
+
+            }
+        }
+        infoObject.refresh();
+        infoObject.repaint();
     }
 
     private void checkHit(SpaceObject so) {
@@ -152,7 +172,7 @@ public class MainGameFrame extends JFrame {
                 if (spaceObject.getState().equals(SpaceObjectState.ALIVE) && spaceObject instanceof Hitable) {
                     Hitable hitable = (Hitable) spaceObject;
                     if (CollisionChecker.collided(projectile, spaceObject)) {
-                        hitable.beingHit();
+                        hitable.beingHit(projectile.damage());
                         projectile.hitTheTarget();
                     }
                 }
@@ -162,12 +182,12 @@ public class MainGameFrame extends JFrame {
 
     private Planet createRandomPlanet() {
         Dimension size = getContentPane().getSize();
-        Planet p = new Planet();
+        Planet p = new Planet(this);
         add(p);
         p.setBounds(
-                r.nextInt(size.width) + size.width, 
-                r.nextInt(size.height) - p.getComponentHeight() / 2, 
-                p.getComponentWidth(), 
+                r.nextInt(size.width) + size.width,
+                r.nextInt(size.height) - p.getComponentHeight() / 2,
+                p.getComponentWidth(),
                 p.getComponentHeight());
         return p;
     }

@@ -82,7 +82,7 @@ public abstract class SpaceObject extends JComponent {
         this.state = state;
     }
 
-    public void handleCollision() {
+    public void handleCollision(SpaceObject other) {
 
     }
     

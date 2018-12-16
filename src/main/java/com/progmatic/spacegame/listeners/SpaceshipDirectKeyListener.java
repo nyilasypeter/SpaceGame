@@ -6,7 +6,8 @@
 package com.progmatic.spacegame.listeners;
 
 import com.progmatic.spacegame.MainGameFrame;
-import com.progmatic.spacegame.spaceobjects.Bullet;
+import com.progmatic.spacegame.spaceobjects.projectile.Bullet;
+import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -132,8 +133,14 @@ public class SpaceshipDirectKeyListener implements KeyListener {
             }
 
         } else if (keyCode == 32) {
-            Bullet bullet = spaceship.fireBullet();
+            Projectile bullet = spaceship.fireBullet();
             gameFrame.addBullet(bullet);
+        }
+        else if (keyCode == 65) {
+            Projectile missile = spaceship.fireMissile();
+            if(missile != null){
+                gameFrame.addBullet(missile);
+            }
         }
 
     }

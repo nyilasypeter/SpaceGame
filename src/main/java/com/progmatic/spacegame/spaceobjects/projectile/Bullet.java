@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.progmatic.spacegame.spaceobjects;
+package com.progmatic.spacegame.spaceobjects.projectile;
 
 import com.progmatic.spacegame.SpaceObjectState;
+import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,7 +14,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -56,13 +56,18 @@ public class Bullet extends Projectile {
     }
 
     @Override
-    public void handleCollision() {
+    public void handleCollision(SpaceObject other) {
         this.state = SpaceObjectState.DEAD;
     }
 
     @Override
     public Shape getApproximationShape() {
         return getBounds();
+    }
+
+    @Override
+    public int damage() {
+        return 1;
     }
 
 
