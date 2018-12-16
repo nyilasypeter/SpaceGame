@@ -19,44 +19,32 @@ import javax.swing.JComponent;
  * @author peti
  */
 public class InfoObject extends JComponent {
-    
-    private Spaceship spaceship;
-    private List<Missile> missiles = new ArrayList<>();
 
-    public InfoObject(Spaceship sp){
+    private final Spaceship spaceship;
+    Missile m;
+
+    public InfoObject(Spaceship sp) {
         super();
         this.spaceship = sp;
         setLayout(null);
-        
+
+        m = new Missile();
+        add(m);
+        m.setBounds(1, 1, m.getComponentWidth(), m.getComponentHeight());
+
     }
-    
 
     @Override
     protected void paintComponent(Graphics g) {
         //super.paintComponent(g);
         g.setColor(Color.red);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        g.drawString("x", m.getComponentWidth()/2-22, 50);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        g.drawString(String.valueOf(spaceship.getNrOfMissiles()), m.getComponentWidth()/2-2, 50);
+        
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
         g.drawString(String.valueOf(spaceship.getScore()), 100, 24);
     }
-    
-    public void refresh(){
-        refreshNumberOfMissiles();
-        
-    }
 
-    private void refreshNumberOfMissiles() {
-        int nrOfMissiles = spaceship.getNrOfMissiles();
-        for(int i=missiles.size(); i<nrOfMissiles; i++){
-            Missile m = new Missile();
-            missiles.add(m);
-            add(m);
-            m.setBounds(0, i*m.getComponentHeight(), m.getComponentWidth(), m.getComponentHeight());
-        }
-        while(missiles.size() > nrOfMissiles){
-            Missile m = missiles.remove(missiles.size()-1);
-            remove(m);
-        }
-    }
-    
-    
 }

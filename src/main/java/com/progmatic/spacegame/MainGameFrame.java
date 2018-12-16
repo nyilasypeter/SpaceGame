@@ -128,7 +128,6 @@ public class MainGameFrame extends JFrame {
             System.out.println(frameBounds.width);
             add(infoObject);
             infoObject.setBounds(frameBounds.width - 200, 30, 200, 200);
-            infoObject.refresh();
             infoObject.repaint();
         }
 
@@ -161,7 +160,6 @@ public class MainGameFrame extends JFrame {
 
             }
         }
-        infoObject.refresh();
         infoObject.repaint();
     }
 
