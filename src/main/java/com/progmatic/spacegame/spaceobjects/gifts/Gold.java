@@ -39,13 +39,6 @@ public class Gold extends Gift{
     }
 
     @Override
-    public void handleCollision(SpaceObject other) {
-        if(other instanceof Spaceship){
-            setState(SpaceObjectState.DEAD);
-        }
-    }
-
-    @Override
     public int getComponentWidth() {
         return width;
     }

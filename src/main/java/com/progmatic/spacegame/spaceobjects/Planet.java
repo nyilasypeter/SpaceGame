@@ -8,7 +8,9 @@ package com.progmatic.spacegame.spaceobjects;
 import com.progmatic.spacegame.MainGameFrame;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.SpaceObjectState;
+import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import com.progmatic.spacegame.spaceobjects.gifts.Gold;
+import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -37,6 +39,7 @@ public class Planet extends SpaceObject implements Hitable {
     private final Color[] extraCircleColors;
     private int bulletResistance;
     private final MainGameFrame mainGameFrame;
+    private final Gift gift;
 
     private int repeatNr = 0;
     private Timer t;
@@ -65,6 +68,13 @@ public class Planet extends SpaceObject implements Hitable {
         this.extraCircleColors = new Color[this.nrOfExtraCircles];
         for (int i = 0; i < this.nrOfExtraCircles; i++) {
             this.extraCircleColors[i] = randomColor();
+        }
+        int giftType = r.nextInt(4);
+        if(giftType >= 3){
+            gift = new Life();
+        }
+        else{
+            gift = new Gold();
         }
     }
 
@@ -165,14 +175,13 @@ public class Planet extends SpaceObject implements Hitable {
     }
     
     private void showGift(){
-        Gold gold = new Gold();
         Point center = getAbsoluteCenter();
-        gold.setBounds(
-                center.x-gold.getComponentWidth()/2, 
-                center.y-gold.getComponentHeight()/2, 
-                gold.getComponentWidth(), 
-                gold.getComponentHeight());
-        mainGameFrame.addGift(gold);
+        gift.setBounds(
+                center.x-gift.getComponentWidth()/2, 
+                center.y-gift.getComponentHeight()/2, 
+                gift.getComponentWidth(), 
+                gift.getComponentHeight());
+        mainGameFrame.addGift(gift);
     }
 
     @Override

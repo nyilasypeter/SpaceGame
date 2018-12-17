@@ -67,7 +67,8 @@ public abstract class SpaceObject extends JComponent {
     }
     
     protected Point getRelativeCenter(){
-        return null;
+        Point p = new Point(getComponentWidth()/2, getComponentHeight() / 2);
+        return p;
     }
 
     protected void setBoundsAroundCenter(Point center, int width, int height) {

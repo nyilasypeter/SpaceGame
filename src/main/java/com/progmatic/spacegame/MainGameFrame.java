@@ -18,6 +18,7 @@ import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.listeners.MainFrameComponentListener;
 import com.progmatic.spacegame.listeners.SpaceshipDirectKeyListener;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
+import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -74,7 +75,6 @@ public class MainGameFrame extends JFrame {
         addKeyListener(skListener);
         MainFrameComponentListener mfcl = new MainFrameComponentListener(skListener);
         addComponentListener(mfcl);
-
     }
 
     public void addBlinker() {
@@ -111,7 +111,7 @@ public class MainGameFrame extends JFrame {
     public void initializeIfNeeded() {
         if (!initialized) {
             initialized = true;
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 5; i++) {
                 spaceObjects.add(createRandomPlanet());
             }
             mainAnimator = new Timer(20, new ActionListener() {

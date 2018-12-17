@@ -7,11 +7,10 @@ package com.progmatic.spacegame.infoobjects;
 
 import com.progmatic.spacegame.spaceobjects.projectile.Missile;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
+import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JComponent;
 
 /**
@@ -21,7 +20,12 @@ import javax.swing.JComponent;
 public class InfoObject extends JComponent {
 
     private final Spaceship spaceship;
-    Missile m;
+    private final Missile m;
+    private final Life l;
+    private final int sizeOfScoreText = 35;
+    
+    private final int spaceBetween = 5;
+    private final int largeSpaceBetween = 25;
 
     public InfoObject(Spaceship sp) {
         super();
@@ -30,21 +34,48 @@ public class InfoObject extends JComponent {
 
         m = new Missile();
         add(m);
-        m.setBounds(1, 1, m.getComponentWidth(), m.getComponentHeight());
-
+        
+        l = new Life(10, 5, 10);
+        add(l);
+        
+        m.setBounds(1, missileStartsAtHeight(), m.getComponentWidth(), m.getComponentHeight());
+        l.setBounds(1, lifeStartsAtHeight(), l.getComponentWidth(), l.getComponentHeight());
+    }
+    
+    private int missileStartsAtHeight(){
+        return sizeOfScoreText + largeSpaceBetween;
+    }
+    
+    private int lifeStartsAtHeight(){
+        return missileStartsAtHeight() + m.getComponentHeight() + spaceBetween;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        //super.paintComponent(g);
-        g.setColor(Color.red);
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-        g.drawString("x", m.getComponentWidth()/2-22, 50);
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
-        g.drawString(String.valueOf(spaceship.getNrOfMissiles()), m.getComponentWidth()/2-2, 50);
         
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
-        g.drawString(String.valueOf(spaceship.getScore()), 100, 24);
-    }
+         //write scores
+        g.setColor(Color.WHITE);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, sizeOfScoreText));
+        g.drawString(String.valueOf(spaceship.getScore()), 1, l.getComponentHeight() + spaceBetween);
+  
+        
+        //write nr of missiles
+        g.setColor(Color.GREEN);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        //g.drawString("x", m.getComponentWidth()+spaceBetween, missileStartsAtHeight() + m.getComponentHeight());
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        g.drawString(String.valueOf(spaceship.getNrOfMissiles()), 
+                m.getComponentWidth() + spaceBetween + 20, 
+                missileStartsAtHeight() + m.getComponentHeight());
+        
+        //write nr of life
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        //g.drawString("x", l.getComponentWidth() + spaceBetween, lifeStartsAtHeight() + l.getComponentHeight());
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        g.drawString(String.valueOf(spaceship.getLife()), 
+                m.getComponentWidth() +  spaceBetween + 20, 
+                lifeStartsAtHeight() + l.getComponentHeight());
+        
+         }
 
 }

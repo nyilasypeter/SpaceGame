@@ -6,6 +6,7 @@
 package com.progmatic.spacegame.spaceobjects;
 
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
+import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import com.progmatic.spacegame.spaceobjects.projectile.Bullet;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.projectile.Missile;
@@ -119,6 +120,10 @@ public class Spaceship extends SpaceObject implements Hitable {
         else if(other instanceof Gift){
             Gift g = (Gift) other;
             score+= g.getValue();
+            
+            if(g instanceof Life){
+                this.life++;
+            }
         }
     }
 
