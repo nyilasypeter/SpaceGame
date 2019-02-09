@@ -27,12 +27,15 @@ public abstract class SpaceObject extends JComponent {
     public abstract void move();
     
     public abstract Shape getApproximationShape();
+    
+    public abstract boolean isOutOfGameField(Rectangle rectangle);
+    
 
     protected void paintCircleAorundPoint(int x, int y, int diameter, Graphics g) {
-        paintCircleAorundPoint(x, y, diameter, false, g);
+        paintCircleAroundPoint(x, y, diameter, false, g);
     }
 
-    protected void paintCircleAorundPoint(int x, int y, int diameter, boolean fill, Graphics g) {
+    protected void paintCircleAroundPoint(int x, int y, int diameter, boolean fill, Graphics g) {
         int swingX = x - diameter / 2;
         int swingY = y - diameter / 2;
         if (fill) {
@@ -85,6 +88,10 @@ public abstract class SpaceObject extends JComponent {
 
     public void handleCollision(SpaceObject other) {
 
+    }
+    
+    public SpaceObject createGiftAfterDying(){
+        return null;
     }
     
     

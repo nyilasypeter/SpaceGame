@@ -44,7 +44,7 @@ public class Life extends Gift {
         g.setColor(SUN);
 
         Point center = getRelativeCenter();
-        paintCircleAorundPoint(center.x, center.y, baseRadius, true, g);
+        paintCircleAroundPoint(center.x, center.y, baseRadius, true, g);
 
         int fullDia = baseRadius + raylength;
         int smallDia = baseRadius / 2;

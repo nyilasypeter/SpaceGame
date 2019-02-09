@@ -5,7 +5,6 @@
  */
 package com.progmatic.spacegame;
 
-import java.awt.Color;
 import javax.swing.SwingUtilities;
 
 /**
@@ -22,8 +21,6 @@ public class Game {
                 MainGameFrame frame = new MainGameFrame();
                 frame.init();
                 frame.addSpaceShip();
-                //frame.addBlinker();
-                //frame.addExploder();
                 //frame.addGrowShrinkStar();
                 frame.setVisible(true);
             }

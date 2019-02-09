@@ -28,7 +28,7 @@ public class Spaceship extends SpaceObject implements Hitable {
     private static final Color WINDOW_COLOR_ALIVE = Color.decode("#e9f409");//#f3ff00
     private static final Color WINDOW_COLOR_DEAD = Color.BLACK;
 
-    private int life = 4;
+    private int life = 4 ;
     private int nrOfMissiles = 4;
     private int score = 0;
 
@@ -168,6 +168,11 @@ public class Spaceship extends SpaceObject implements Hitable {
 
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public boolean isOutOfGameField(Rectangle rectangle) {
+        return false;
     }
     
     

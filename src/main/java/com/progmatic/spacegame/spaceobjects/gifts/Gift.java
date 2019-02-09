@@ -8,13 +8,14 @@ package com.progmatic.spacegame.spaceobjects.gifts;
 import com.progmatic.spacegame.SpaceObjectState;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
+import com.progmatic.spacegame.spaceobjects.UnMovingSpaceObject;
 import java.util.Random;
 
 /**
  *
  * @author peti
  */
-public abstract class Gift extends SpaceObject {
+public abstract class Gift extends UnMovingSpaceObject {
 
     protected final Random r = new Random();
     private final long createdAt;

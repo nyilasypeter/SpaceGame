@@ -5,6 +5,7 @@
  */
 package com.progmatic.spacegame.spaceobjects.enemy;
 
+import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -19,7 +20,7 @@ import javax.swing.Timer;
  *
  * @author peti
  */
-public class GrowShrinkStar extends SpaceObject {
+public class GrowShrinkStar extends RightToLeftSpaceObject {
 
     private int repeatNr = 0;
     private Timer t;
@@ -36,7 +37,7 @@ public class GrowShrinkStar extends SpaceObject {
         super.paintComponent(g);
         g.setColor(Color.CYAN);
         if (repeatNr == 0) {
-            paintCircleAorundPoint(50, 50, diameter, true, g);
+            paintCircleAroundPoint(50, 50, diameter, true, g);
         } else if (repeatNr == -1) {
 
         } else {

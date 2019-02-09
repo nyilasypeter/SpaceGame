@@ -5,10 +5,9 @@
  */
 package com.progmatic.spacegame;
 
+import com.progmatic.spacegame.infoobjects.GameOverMenu;
 import com.progmatic.spacegame.infoobjects.InfoObject;
-import com.progmatic.spacegame.spaceobjects.enemy.Blinker;
 import com.progmatic.spacegame.utils.CollisionChecker;
-import com.progmatic.spacegame.spaceobjects.enemy.Exploder;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
@@ -18,7 +17,6 @@ import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.listeners.MainFrameComponentListener;
 import com.progmatic.spacegame.listeners.SpaceshipDirectKeyListener;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
-import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -40,15 +38,10 @@ public class MainGameFrame extends JFrame {
 
     private Spaceship sp;
 
-    private List<SpaceObject> spaceObjects = Collections.synchronizedList(new ArrayList<>());
+    private final List<SpaceObject> spaceObjects = Collections.synchronizedList(new ArrayList<>());
     private InfoObject infoObject;
     private Timer mainAnimator;
     private boolean initialized = false;
-
-    /**
-     * pixel / 100 ms
-     */
-    Random r = new Random();
 
     public MainGameFrame() {
     }
@@ -77,20 +70,6 @@ public class MainGameFrame extends JFrame {
         addComponentListener(mfcl);
     }
 
-    public void addBlinker() {
-        Blinker b = new Blinker();
-        b.setBounds(100, 100, 120, 120);
-        add(b);
-        b.startBlinking();
-    }
-
-    public void addExploder() {
-        Exploder b = new Exploder();
-        b.setBounds(300, 300, 120, 120);
-        add(b);
-        b.startToExplode();
-    }
-
     public void addGrowShrinkStar() {
         GrowShrinkStar b = new GrowShrinkStar();
         b.setBounds(500, 500, 120, 120);
@@ -102,17 +81,23 @@ public class MainGameFrame extends JFrame {
         add(b);
         spaceObjects.add(b);
     }
-    
-    public void addGift(Gift gift){
+
+    public void addGift(Gift gift) {
         add(gift);
         spaceObjects.add(gift);
     }
 
+    /**
+     * the MainFrame should be intiailized after it is fully built up.
+     */
     public void initializeIfNeeded() {
         if (!initialized) {
+            SpaceObjectProvider.sizeOfGameField = getContentPane().getSize();
             initialized = true;
             for (int i = 0; i < 5; i++) {
-                spaceObjects.add(createRandomPlanet());
+                SpaceObject sp = SpaceObjectProvider.instance().createSpaceObject();
+                spaceObjects.add(sp);
+                add(sp);
             }
             mainAnimator = new Timer(20, new ActionListener() {
                 @Override
@@ -125,7 +110,6 @@ public class MainGameFrame extends JFrame {
 
             Rectangle frameBounds = getBounds();
             infoObject = new InfoObject(sp);
-            System.out.println(frameBounds.width);
             add(infoObject);
             infoObject.setBounds(frameBounds.width - 200, 30, 200, 200);
             infoObject.repaint();
@@ -135,11 +119,17 @@ public class MainGameFrame extends JFrame {
 
     private void mainTimerFired() {
         ListIterator<SpaceObject> li = spaceObjects.listIterator();
+
         while (li.hasNext()) {
             SpaceObject so = li.next();
-            if (so.getBounds().x < 0 - so.getWidth()) {
+            if (so.isOutOfGameField(getContentPane().getBounds())) {
+                SpaceObject other = SpaceObjectProvider.instance().replace(so);
+                remove(so);
                 li.remove();
-                li.add(createRandomPlanet());
+                if (other != null) {
+                    this.add(other);
+                    li.add(other);
+                }
 
             } else {
                 if (so.getState().equals(SpaceObjectState.ALIVE)) {
@@ -149,18 +139,45 @@ public class MainGameFrame extends JFrame {
                         sp.handleCollision(so);
                     }
                     checkHit(so);
+                } else if (so.getState().equals(SpaceObjectState.AGOZNIZING)) {
+                    so.move();
                 } else if (so.getState().equals(SpaceObjectState.DEAD)) {
+                    SpaceObject gift = so.createGiftAfterDying();
+                    SpaceObject other = SpaceObjectProvider.instance().replace(so);
                     remove(so);
-                    repaint();
                     li.remove();
-                    if (so instanceof Planet) {
-                        li.add(createRandomPlanet());
+                    if (other != null) {
+                        this.add(other);
+                        li.add(other);
                     }
+                    if (gift != null) {
+                        li.add(gift);
+                        add(gift);
+                    }
+                    repaint();
+
                 }
 
             }
         }
+        if (sp.getLife() == 0) {
+            gameOver();
+        }
         infoObject.repaint();
+    }
+
+    public void gameOver() {
+        mainAnimator.stop();
+        Rectangle frameBounds = getBounds();
+        GameOverMenu goMenu = new GameOverMenu();
+        add(goMenu, 1);
+        goMenu.setBounds(frameBounds.width / 2 - goMenu.getWidth() / 2,
+                frameBounds.height / 2 - goMenu.getHeight() / 2,
+                goMenu.getWidth(),
+                goMenu.getHeight());
+//goMenu.setBounds(10, 10, 200, 200);
+        goMenu.repaint();
+
     }
 
     private void checkHit(SpaceObject so) {
@@ -176,18 +193,6 @@ public class MainGameFrame extends JFrame {
                 }
             }
         }
-    }
-
-    private Planet createRandomPlanet() {
-        Dimension size = getContentPane().getSize();
-        Planet p = new Planet(this);
-        add(p);
-        p.setBounds(
-                r.nextInt(size.width) + size.width,
-                r.nextInt(size.height) - p.getComponentHeight() / 2,
-                p.getComponentWidth(),
-                p.getComponentHeight());
-        return p;
     }
 
 }
