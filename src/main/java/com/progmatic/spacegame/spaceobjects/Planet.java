@@ -5,12 +5,11 @@
  */
 package com.progmatic.spacegame.spaceobjects;
 
-import com.progmatic.spacegame.MainGameFrame;
-import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.SpaceObjectState;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
+import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -212,9 +211,7 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
             setBoundsAroundCenter(absCenter, actDiameter, actDiameter);
             repaint();
             if (repeatNr >= maxRepeatNr) {
-                //repeatNr = -1;
                 repaint();
-                //showGift();
                 state = SpaceObjectState.DEAD;
             }
         }

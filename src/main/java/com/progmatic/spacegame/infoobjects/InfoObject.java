@@ -5,9 +5,9 @@
  */
 package com.progmatic.spacegame.infoobjects;
 
-import com.progmatic.spacegame.spaceobjects.projectile.Missile;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
+import com.progmatic.spacegame.spaceobjects.projectile.Missile;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

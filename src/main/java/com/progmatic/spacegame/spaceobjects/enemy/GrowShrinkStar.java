@@ -6,7 +6,6 @@
 package com.progmatic.spacegame.spaceobjects.enemy;
 
 import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
-import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;

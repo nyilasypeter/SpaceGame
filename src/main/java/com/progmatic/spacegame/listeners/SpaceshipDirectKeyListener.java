@@ -6,9 +6,8 @@
 package com.progmatic.spacegame.listeners;
 
 import com.progmatic.spacegame.MainGameFrame;
-import com.progmatic.spacegame.spaceobjects.projectile.Bullet;
-import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
+import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -19,7 +18,6 @@ import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.Timer;
-import sun.awt.motif.MFontConfiguration;
 
 /**
  *

@@ -7,7 +7,6 @@ package com.progmatic.spacegame.spaceobjects.projectile;
 
 import com.progmatic.spacegame.SpaceObjectState;
 import com.progmatic.spacegame.spaceobjects.LeftToRightSpaceObject;
-import com.progmatic.spacegame.spaceobjects.SpaceObject;
 
 /**
  *

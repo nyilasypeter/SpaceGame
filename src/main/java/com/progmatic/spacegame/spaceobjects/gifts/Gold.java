@@ -5,9 +5,6 @@
  */
 package com.progmatic.spacegame.spaceobjects.gifts;
 
-import com.progmatic.spacegame.SpaceObjectState;
-import com.progmatic.spacegame.spaceobjects.SpaceObject;
-import com.progmatic.spacegame.spaceobjects.Spaceship;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Shape;
