@@ -19,6 +19,7 @@ import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.Timer;
+import sun.awt.motif.MFontConfiguration;
 
 /**
  *
@@ -32,6 +33,7 @@ public class SpaceshipDirectKeyListener implements KeyListener {
     private static final Set<Integer> arrowKeys = new HashSet<>();
     private Dimension mainFrameDimensions;
     private final MainGameFrame gameFrame;
+    private boolean inNextLevelMenu = false;
 
     private boolean goAround = false;
 
@@ -121,6 +123,10 @@ public class SpaceshipDirectKeyListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(inNextLevelMenu && e.getKeyCode() == 10){
+            gameFrame.nextLevel();
+            inNextLevelMenu = false;
+        }
         gameFrame.initializeIfNeeded();
         int keyCode = e.getKeyCode();
         if (e.isActionKey()) {
@@ -163,5 +169,11 @@ public class SpaceshipDirectKeyListener implements KeyListener {
     public void setMainFrameDimensions(Dimension mainFrameDimensions) {
         this.mainFrameDimensions = mainFrameDimensions;
     }
+
+    public void setInNextLevelMenu() {
+        this.inNextLevelMenu = true;
+    }
+    
+    
 
 }

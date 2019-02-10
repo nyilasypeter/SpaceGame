@@ -7,18 +7,17 @@ package com.progmatic.spacegame;
 
 import com.progmatic.spacegame.infoobjects.GameOverMenu;
 import com.progmatic.spacegame.infoobjects.InfoObject;
+import com.progmatic.spacegame.infoobjects.NextLevelMenu;
 import com.progmatic.spacegame.utils.CollisionChecker;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
-import com.progmatic.spacegame.spaceobjects.Planet;
 import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.listeners.MainFrameComponentListener;
 import com.progmatic.spacegame.listeners.SpaceshipDirectKeyListener;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -42,6 +40,11 @@ public class MainGameFrame extends JFrame {
     private InfoObject infoObject;
     private Timer mainAnimator;
     private boolean initialized = false;
+    private int actLevel = 1;
+    private SpaceshipDirectKeyListener skListener;
+    private NextLevelMenu nextLevMenu;
+
+    private static final int[] LEVEL_SCORES = {100, 2000, 3000};
 
     public MainGameFrame() {
     }
@@ -64,7 +67,7 @@ public class MainGameFrame extends JFrame {
         sp = new Spaceship();
         sp.setBounds(100, 100, sp.getComponentWidth(), sp.getComponentHeight());
         add(sp);
-        SpaceshipDirectKeyListener skListener = new SpaceshipDirectKeyListener(sp, getContentPane().getSize(), this);
+        skListener = new SpaceshipDirectKeyListener(sp, getContentPane().getSize(), this);
         addKeyListener(skListener);
         MainFrameComponentListener mfcl = new MainFrameComponentListener(skListener);
         addComponentListener(mfcl);
@@ -92,20 +95,23 @@ public class MainGameFrame extends JFrame {
      */
     public void initializeIfNeeded() {
         if (!initialized) {
-            SpaceObjectProvider.sizeOfGameField = getContentPane().getSize();
             initialized = true;
+            SpaceObjectProvider.instance().configure(getContentPane().getSize());
+            SpaceObjectProvider.instance().setLevel(actLevel);
             for (int i = 0; i < 5; i++) {
                 SpaceObject sp = SpaceObjectProvider.instance().createSpaceObject();
                 spaceObjects.add(sp);
                 add(sp);
             }
-            mainAnimator = new Timer(20, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mainTimerFired();
-                }
+            if (mainAnimator == null) {
+                mainAnimator = new Timer(20, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        mainTimerFired();
+                    }
 
-            });
+                });
+            }
             mainAnimator.start();
 
             Rectangle frameBounds = getBounds();
@@ -163,6 +169,9 @@ public class MainGameFrame extends JFrame {
         if (sp.getLife() == 0) {
             gameOver();
         }
+        if (getLevelByScore(sp.getScore()) > actLevel) {
+            showNextLevelMenu();
+        }
         infoObject.repaint();
     }
 
@@ -175,9 +184,35 @@ public class MainGameFrame extends JFrame {
                 frameBounds.height / 2 - goMenu.getHeight() / 2,
                 goMenu.getWidth(),
                 goMenu.getHeight());
-//goMenu.setBounds(10, 10, 200, 200);
         goMenu.repaint();
 
+    }
+
+    private void showNextLevelMenu() {
+        mainAnimator.stop();
+        Rectangle frameBounds = getBounds();
+        nextLevMenu = new NextLevelMenu(actLevel);
+        add(nextLevMenu, 1);
+        nextLevMenu.setBounds(frameBounds.width / 2 - nextLevMenu.getWidth() / 2,
+                frameBounds.height / 2 - nextLevMenu.getHeight() / 2,
+                nextLevMenu.getWidth(),
+                nextLevMenu.getHeight());
+        nextLevMenu.repaint();
+        skListener.setInNextLevelMenu();
+    }
+    
+    public void nextLevel(){
+        actLevel++;
+        SpaceObjectProvider.instance().setLevel(actLevel);
+        for (SpaceObject spaceObject : spaceObjects) {
+            remove(spaceObject);
+        }
+        spaceObjects.clear();
+        initialized = false;
+        initializeIfNeeded();
+        remove(nextLevMenu);
+        sp.setLife(Math.max(sp.getLife(), 4));
+        repaint();
     }
 
     private void checkHit(SpaceObject so) {
@@ -193,6 +228,15 @@ public class MainGameFrame extends JFrame {
                 }
             }
         }
+    }
+
+    private int getLevelByScore(int score) {
+        for (int i = 0; i < LEVEL_SCORES.length; i++) {
+            if (score <= LEVEL_SCORES[i]) {
+                return i + 1;
+            }
+        }
+        return LEVEL_SCORES.length + 1;
     }
 
 }

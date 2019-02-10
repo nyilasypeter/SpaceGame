@@ -25,7 +25,7 @@ public class SpaceObjectProvider {
 
     private static final SpaceObjectProvider me = new SpaceObjectProvider();
     private final Random r;
-    static Dimension sizeOfGameField;
+    private Dimension sizeOfGameField;
     private final static Map<Integer, RandomProvider> spaceObjectsPerLevel = new HashMap<>();
     private int level = 1;
     
@@ -41,6 +41,10 @@ public class SpaceObjectProvider {
 
     private SpaceObjectProvider() {
         this.r = new Random();
+    }
+    
+    public void configure(Dimension d){
+        this.sizeOfGameField = d;
     }
 
     public static SpaceObjectProvider instance() {
