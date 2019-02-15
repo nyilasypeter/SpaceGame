@@ -44,7 +44,7 @@ public class MainGameFrame extends JFrame {
     private SpaceshipDirectKeyListener skListener;
     private NextLevelMenu nextLevMenu;
 
-    private static final int[] LEVEL_SCORES = {100, 2000, 3000};
+    private static final int[] LEVEL_SCORES = {1000, 2000, 3000};
 
     public MainGameFrame() {
     }
@@ -75,7 +75,7 @@ public class MainGameFrame extends JFrame {
 
     public void addGrowShrinkStar() {
         GrowShrinkStar b = new GrowShrinkStar();
-        b.setBounds(500, 500, 120, 120);
+        b.setBounds(500, 500, b.getComponentWidth(), b.getComponentHeight());
         add(b);
         b.startToExplode();
     }
@@ -98,10 +98,9 @@ public class MainGameFrame extends JFrame {
             initialized = true;
             SpaceObjectProvider.instance().configure(getContentPane().getSize());
             SpaceObjectProvider.instance().setLevel(actLevel);
-            for (int i = 0; i < 5; i++) {
-                SpaceObject sp = SpaceObjectProvider.instance().createSpaceObject();
-                spaceObjects.add(sp);
-                add(sp);
+            for (SpaceObject so : SpaceObjectProvider.instance().initSpaceObjects()) {
+                spaceObjects.add(so);
+                add(so);
             }
             if (mainAnimator == null) {
                 mainAnimator = new Timer(20, new ActionListener() {

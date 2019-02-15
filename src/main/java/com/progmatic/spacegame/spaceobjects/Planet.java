@@ -34,7 +34,6 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     private final int nrOfExtraCircles;
     private final boolean[] isFilledCircle;
     private final Color[] extraCircleColors;
-    private int bulletResistance;
     private final Gift gift;
     
     private int repeatNr = 0;
@@ -145,11 +144,6 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
         }
     }
     
-    @Override
-    public void handleCollision(SpaceObject other) {
-        this.state = SpaceObjectState.AGOZNIZING;
-        //startToExplode();
-    }
     
     @Override
     public Point getRelativeCenter() {
@@ -224,14 +218,7 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
         return sh;
     }
     
-    @Override
-    public void beingHit(int damage) {
-        bulletResistance -= damage;
-        if (bulletResistance <= 0) {
-            this.state = SpaceObjectState.AGOZNIZING;
-            //startToExplode();
-        }
-    }
+    
     
     @Override
     public SpaceObject createGiftAfterDying() {

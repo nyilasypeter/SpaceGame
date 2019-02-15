@@ -10,9 +10,11 @@ import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javafx.util.Pair;
@@ -27,15 +29,24 @@ public class SpaceObjectProvider {
     private final Random r;
     private Dimension sizeOfGameField;
     private final static Map<Integer, RandomProvider> spaceObjectsPerLevel = new HashMap<>();
+    private final static Map<Integer, Integer> nrOfSpaceObjectsPerLevel = new HashMap<>();
     private int level = 1;
     
     
     static{
+//        spaceObjectsPerLevel.put(1, new RandomProvider(
+//                new Pair<>(Planet.class.getName(), 100)));
+//        nrOfSpaceObjectsPerLevel.put(1, 5);
+        
         spaceObjectsPerLevel.put(1, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 100)));
+                new Pair<>(GrowShrinkStar.class.getName(), 70),
+                new Pair<>(GrowShrinkStar.class.getName(), 30)));
+        nrOfSpaceObjectsPerLevel.put(1, 6);
+        
         spaceObjectsPerLevel.put(2, new RandomProvider(
                 new Pair<>(Planet.class.getName(), 70),
                 new Pair<>(GrowShrinkStar.class.getName(), 30)));
+        nrOfSpaceObjectsPerLevel.put(2, 6);
     
     }
 
@@ -58,14 +69,22 @@ public class SpaceObjectProvider {
         return null;
     }
     
-    public SpaceObject createSpaceObject(){
+    public List<SpaceObject> initSpaceObjects(){
+        List<SpaceObject> ret = new ArrayList<>();
+        for (int i = 0; i < nrOfSpaceObjectsPerLevel.get(level); i++) {
+            ret.add(createSpaceObject());
+        }
+        return ret;
+    }
+    
+    private SpaceObject createSpaceObject(){
         RandomProvider rp = spaceObjectsPerLevel.get(level);
         String className = rp.getRandomString();
         if(Planet.class.getName().equals(className)){
             return createRandomPlanet();
         }
         else if(GrowShrinkStar.class.getName().equals(className)){
-            return new GrowShrinkStar();
+            return createRandomGrowShrinkStar();
         }
         else{
             throw new RuntimeException("unknown spaceobject returned by RandomProvider.getRandomString(): " + className);
@@ -74,12 +93,22 @@ public class SpaceObjectProvider {
 
     private Planet createRandomPlanet() {
         Planet p = new Planet();
+        setRandomBounds(p);
+        return p;
+    }
+    
+    private GrowShrinkStar createRandomGrowShrinkStar() {
+        GrowShrinkStar p = new GrowShrinkStar();
+        setRandomBounds(p);
+        return p;
+    }
+    
+    private void setRandomBounds(RightToLeftSpaceObject p){
         p.setBounds(
                 r.nextInt(sizeOfGameField.width) + sizeOfGameField.width,
                 r.nextInt(sizeOfGameField.height) - p.getComponentHeight() / 2,
                 p.getComponentWidth(),
                 p.getComponentHeight());
-        return p;
     }
 
     private boolean shouldReplace(SpaceObject toReplace) {
