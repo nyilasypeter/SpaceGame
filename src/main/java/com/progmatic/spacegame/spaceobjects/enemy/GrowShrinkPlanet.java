@@ -28,27 +28,29 @@ import javax.swing.Timer;
  * @author peti
  */
 public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable {
-    
+
     private final Random r = new Random();
     private final int origDiameter;
     private int diameter;
     private final int strokesize;
     private final Color color;
     private final Gift gift;
-    
+
     private int repeatNr = 0;
     private Timer t;
-    
+
     private final int explodedDiameter;
     private final int maxRepeatNr = 75;//15
+    private final int maxThornRepeatNr = 75;
     private final int nrOfPieces = 10;
-    
+
+    private final int nrOfThorns;
+
     private final int planetSpeed;
-    
+
     private int growShinkCounter = 0;
     private final int sizeToGrow;
-    
-    
+
     public GrowShrinkPlanet() {
         this.origDiameter = r.nextInt(150) + 30;
         this.diameter = origDiameter;
@@ -56,8 +58,9 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         this.explodedDiameter = origDiameter + 50;
         this.planetSpeed = r.nextInt(5) + 1;
         this.strokesize = 0;
-        this.sizeToGrow = r.nextInt(80)+60;
+        this.sizeToGrow = r.nextInt(origDiameter) + 50;
         this.color = randomColor();
+        this.nrOfThorns = r.nextInt(5) + 7;
         int giftType = r.nextInt(4);
         if (giftType >= 3) {
             gift = new Life();
@@ -65,48 +68,71 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
             gift = new Gold();
         }
     }
-    
+
     private Color randomColor() {
         return Color.getHSBColor(r.nextFloat(), r.nextFloat(), r.nextFloat());
     }
-    
-    private void calcDiameter(){
+
+    private void calcDiameter() {
         growShinkCounter++;
-        if(growShinkCounter == 50){
+        if (growShinkCounter == maxThornRepeatNr) {
             growShinkCounter = 0;
             diameter = origDiameter;
-        }
-        else {
-            double growRatio = (double)sizeToGrow / 50d;
-           //int grow = (int) (diameter + growRatio);
+        } else {
+            double thornStep = calcThornStep();
+            diameter += thornStep;//(int) (thornStep*growShinkCounter) + origDiameter;
+            /*double growRatio = (double) sizeToGrow / 50d;
+            //int grow = (int) (diameter + growRatio);
             int grow = 1;
-           grow = Math.max(grow, 1);
-           diameter += grow;
-           diameter = Math.min(diameter, origDiameter + sizeToGrow);
+            grow = Math.max(grow, 1);
+            diameter += grow;
+            diameter = Math.min(diameter, origDiameter + sizeToGrow);*/
         }
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (this.state.equals(SpaceObjectState.ALIVE)) {
             paintPlanet(g);
-            
+            paintThorns(g);
+
         } else if (this.state.equals(SpaceObjectState.AGOZNIZING)) {
             paintExplodedPlanet(g);
         }
 
     }
-    
+
     private void paintPlanet(Graphics g) {
         g.setColor(color);
         Graphics2D g2 = (Graphics2D) g;
         //g2.setStroke(new BasicStroke(strokesize));
         Point center = getRelativeCenter();
-        g.fillOval(0, 0, diameter, diameter);
+        paintCircleAroundPoint(center.x, center.y, origDiameter, true, g);
+        //g.fillOval(0, 0, origDiameter, origDiameter);
 
     }
-    
+
+    private void paintThorns(Graphics g) {
+        g.setColor(Color.RED);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(strokesize));
+        Point center = getRelativeCenter();
+        int startAngle = 0;
+        int angleGrow = 360 / nrOfThorns;
+        int swingStartAngle = 90 + angleGrow / 2;
+        for (int i = 0; i < nrOfThorns; i++) {
+            Point cp = calcCenterOfExplodingPiece(center, diameter/2, startAngle);
+            Point lp = calcCenterOfExplodingPiece(center, origDiameter, startAngle - angleGrow /2);
+            Point rp = calcCenterOfExplodingPiece(center, origDiameter, startAngle + angleGrow /2);
+            g.fillPolygon(new int[]{cp.x, lp.x, rp.x}, new int[]{cp.y, lp.y, rp.y}, 3);
+            g.drawLine(cp.x, cp.y, center.x, center.y);
+            startAngle += angleGrow;
+            swingStartAngle -= angleGrow;
+
+        }
+    }
+
     private void paintExplodedPlanet(Graphics g) {
         int centerDist = calcExplodedCenterDistance();
         int startAngle = 0;
@@ -121,25 +147,24 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
             paintArcAorundPoint(cp.x, cp.y, origDiameter, swingStartAngle, -1 * angleGrow, true, g);
             startAngle += angleGrow;
             swingStartAngle -= angleGrow;
-            
+
         }
-        
+
     }
-    
-    
+
     @Override
     public Point getRelativeCenter() {
         int actDiameter = diameter;
         if (state.equals(SpaceObjectState.AGOZNIZING)) {
             actDiameter = diameter + calcExplodedCenterDistance() * 2;
         }
-        
+
         int centerX = actDiameter / 2 + strokesize;
         int centery = actDiameter / 2 + strokesize;
         Point p = new Point(centerX, centery);
         return p;
     }
-    
+
     @Override
     public int getComponentWidth() {
         if (state.equals(SpaceObjectState.AGOZNIZING)) {
@@ -147,36 +172,44 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         }
         return (diameter + strokesize * 2);
     }
-    
+
     @Override
     public int getComponentHeight() {
         return getComponentWidth();
     }
-    
+
     private Point calcCenterOfExplodingPiece(Point center, int distance, double angle) {
         int x = (int) (Math.sin(Math.toRadians(angle)) * distance);
         int y = (int) (Math.cos(Math.toRadians(angle)) * distance);
         return new Point(center.x + x, center.y - y);
     }
-    
+
     private int calcExplodedCenterDistance() {
-        int ret =  (int)(calcStep() * repeatNr);
+        int ret = (int) (calcStep() * repeatNr);
         return ret;
-        
+
     }
-    
+
     private double calcStep() {
         int diff = explodedDiameter - origDiameter;
-        double step = (double)diff / maxRepeatNr;
+        double step = (double) diff / maxRepeatNr;
         return step;
     }
     
+    private double calcThornStep() {
+        double step = (double) sizeToGrow / maxThornRepeatNr;
+        if((int)step==0){
+            step = 1d;
+        }
+        return step;
+    }
+
     @Override
     public void move() {
         if (this.state.equals(SpaceObjectState.ALIVE)) {
             Point center = getAbsoluteCenter();
-            calcDiameter();            
-            center.x = center.x-planetSpeed;
+            calcDiameter();
+            center.x = center.x - planetSpeed;
             setBoundsAroundCenter(center, getComponentWidth(), getComponentHeight());
         } else if (this.state.equals(SpaceObjectState.AGOZNIZING)) {
             Point absCenter = getAbsoluteCenter();
@@ -189,17 +222,15 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
                 state = SpaceObjectState.DEAD;
             }
         }
-        
+
     }
-    
+
     @Override
     public Shape getApproximationShape() {
         Shape sh = new Arc2D.Double(getBounds(), 0, 360, Arc2D.Double.CHORD);
         return sh;
     }
-    
-    
-    
+
     @Override
     public SpaceObject createGiftAfterDying() {
         Point center = getAbsoluteCenter();
@@ -210,5 +241,5 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
                 gift.getComponentHeight());
         return gift;
     }
-    
+
 }
