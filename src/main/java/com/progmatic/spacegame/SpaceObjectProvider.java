@@ -9,6 +9,7 @@ import com.progmatic.spacegame.spaceobjects.Planet;
 import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
+import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkPlanet;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +40,7 @@ public class SpaceObjectProvider {
 //        nrOfSpaceObjectsPerLevel.put(1, 5);
         
         spaceObjectsPerLevel.put(1, new RandomProvider(
-                new Pair<>(GrowShrinkStar.class.getName(), 70),
-                new Pair<>(GrowShrinkStar.class.getName(), 30)));
+                new Pair<>(GrowShrinkPlanet.class.getName(), 100)));
         nrOfSpaceObjectsPerLevel.put(1, 6);
         
         spaceObjectsPerLevel.put(2, new RandomProvider(
@@ -86,6 +86,9 @@ public class SpaceObjectProvider {
         else if(GrowShrinkStar.class.getName().equals(className)){
             return createRandomGrowShrinkStar();
         }
+        else if(GrowShrinkPlanet.class.getName().equals(className)){
+            return createRandomPlanet1();
+        }
         else{
             throw new RuntimeException("unknown spaceobject returned by RandomProvider.getRandomString(): " + className);
         }
@@ -94,6 +97,17 @@ public class SpaceObjectProvider {
     private Planet createRandomPlanet() {
         Planet p = new Planet();
         setRandomBounds(p);
+        return p;
+    }
+    
+    private GrowShrinkPlanet createRandomPlanet1() {
+        GrowShrinkPlanet p = new GrowShrinkPlanet();
+        //setRandomBounds(p);
+         p.setBounds(
+                r.nextInt(sizeOfGameField.width),
+                r.nextInt(sizeOfGameField.height) - p.getComponentHeight() / 2,
+                p.getComponentWidth(),
+                p.getComponentHeight());
         return p;
     }
     

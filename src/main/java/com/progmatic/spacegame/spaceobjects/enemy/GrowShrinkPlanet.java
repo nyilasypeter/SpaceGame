@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.progmatic.spacegame.spaceobjects;
+package com.progmatic.spacegame.spaceobjects.enemy;
 
 import com.progmatic.spacegame.SpaceObjectState;
+import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
+import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
@@ -25,15 +27,13 @@ import javax.swing.Timer;
  *
  * @author peti
  */
-public class Planet extends RightToLeftSpaceObject implements Hitable {
+public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable {
     
     private final Random r = new Random();
-    private final int diameter;
+    private final int origDiameter;
+    private int diameter;
     private final int strokesize;
     private final Color color;
-    private final int nrOfExtraCircles;
-    private final boolean[] isFilledCircle;
-    private final Color[] extraCircleColors;
     private final Gift gift;
     
     private int repeatNr = 0;
@@ -43,25 +43,21 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     private final int maxRepeatNr = 75;//15
     private final int nrOfPieces = 10;
     
-    private final int planetAnimationSpeed;
+    private final int planetSpeed;
+    
+    private int growShinkCounter = 0;
+    private final int sizeToGrow;
     
     
-    public Planet() {
-        this.diameter = r.nextInt(250) + 30;
-        this.bulletResistance = (diameter / 50) + 2;
-        this.explodedDiameter = diameter + 50;
-        this.planetAnimationSpeed = r.nextInt(10) + 10;
-        this.strokesize = r.nextInt(10) + 3;
+    public GrowShrinkPlanet() {
+        this.origDiameter = r.nextInt(150) + 30;
+        this.diameter = origDiameter;
+        this.bulletResistance = (origDiameter / 50) + 2;
+        this.explodedDiameter = origDiameter + 50;
+        this.planetSpeed = r.nextInt(5) + 1;
+        this.strokesize = 0;
+        this.sizeToGrow = r.nextInt(80)+60;
         this.color = randomColor();
-        this.nrOfExtraCircles = r.nextInt(6) + 1;
-        this.isFilledCircle = new boolean[this.nrOfExtraCircles];
-        for (int i = 0; i < this.nrOfExtraCircles; i++) {
-            this.isFilledCircle[i] = r.nextBoolean();
-        }
-        this.extraCircleColors = new Color[this.nrOfExtraCircles];
-        for (int i = 0; i < this.nrOfExtraCircles; i++) {
-            this.extraCircleColors[i] = randomColor();
-        }
         int giftType = r.nextInt(4);
         if (giftType >= 3) {
             gift = new Life();
@@ -72,6 +68,22 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     
     private Color randomColor() {
         return Color.getHSBColor(r.nextFloat(), r.nextFloat(), r.nextFloat());
+    }
+    
+    private void calcDiameter(){
+        growShinkCounter++;
+        if(growShinkCounter == 50){
+            growShinkCounter = 0;
+            diameter = origDiameter;
+        }
+        else {
+            double growRatio = (double)sizeToGrow / 50d;
+           //int grow = (int) (diameter + growRatio);
+            int grow = 1;
+           grow = Math.max(grow, 1);
+           diameter += grow;
+           diameter = Math.min(diameter, origDiameter + sizeToGrow);
+        }
     }
     
     @Override
@@ -89,19 +101,10 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     private void paintPlanet(Graphics g) {
         g.setColor(color);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(strokesize));
+        //g2.setStroke(new BasicStroke(strokesize));
         Point center = getRelativeCenter();
-        g.fillOval(strokesize, strokesize, diameter, diameter);
-        
-        if (nrOfExtraCircles != 0) {
-            int step = (int) (diameter / (nrOfExtraCircles));
-            int nextDiam = diameter - step;
-            for (int i = 0; i < nrOfExtraCircles; i++) {
-                g.setColor(extraCircleColors[i]);
-                paintCircleAorundPoint(center.x, center.y, nextDiam, g2);
-                nextDiam = nextDiam - step;
-            }
-        }
+        g.fillOval(0, 0, diameter, diameter);
+
     }
     
     private void paintExplodedPlanet(Graphics g) {
@@ -112,36 +115,15 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
         Point center = getRelativeCenter();
         g.setColor(color);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(strokesize));
+        //g2.setStroke(new BasicStroke(strokesize));
         for (int i = 0; i < nrOfPieces; i++) {
             Point cp = calcCenterOfExplodingPiece(center, centerDist, startAngle);
-            paintArcAorundPoint(cp.x, cp.y, diameter, swingStartAngle, -1 * angleGrow, true, g);
+            paintArcAorundPoint(cp.x, cp.y, origDiameter, swingStartAngle, -1 * angleGrow, true, g);
             startAngle += angleGrow;
             swingStartAngle -= angleGrow;
             
         }
         
-        if (nrOfExtraCircles != 0) {
-            
-            int step = (int) (diameter / (nrOfExtraCircles));
-            int nextDiam = diameter - step;
-            for (int j = 0; j < nrOfExtraCircles; j++) {
-                centerDist = calcExplodedCenterDistance();
-                startAngle = 0;
-                angleGrow = 360 / nrOfPieces;
-                swingStartAngle = 90 + angleGrow / 2;
-                center = getRelativeCenter();
-                g.setColor(extraCircleColors[j]);
-                for (int i = 0; i < nrOfPieces; i++) {
-                    Point cp = calcCenterOfExplodingPiece(center, centerDist, startAngle);
-                    paintArcAorundPoint(cp.x, cp.y, nextDiam, swingStartAngle, -1 * angleGrow, false, g);
-                    startAngle += angleGrow;
-                    swingStartAngle -= angleGrow;
-                    
-                }
-                nextDiam = nextDiam - step;
-            }
-        }
     }
     
     
@@ -177,7 +159,6 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
         return new Point(center.x + x, center.y - y);
     }
     
-    
     private int calcExplodedCenterDistance() {
         int ret =  (int)(calcStep() * repeatNr);
         return ret;
@@ -185,7 +166,7 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     }
     
     private double calcStep() {
-        int diff = explodedDiameter - diameter;
+        int diff = explodedDiameter - origDiameter;
         double step = (double)diff / maxRepeatNr;
         return step;
     }
@@ -193,12 +174,17 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     @Override
     public void move() {
         if (this.state.equals(SpaceObjectState.ALIVE)) {
+            Point center = getAbsoluteCenter();
+            calcDiameter();
             Rectangle bounds = getBounds();
-            setBounds(bounds.x - planetAnimationSpeed, bounds.getBounds().y, getComponentWidth(), getComponentHeight());
+            
+            center.x = center.x-planetSpeed;
+            setBoundsAroundCenter(center, getComponentWidth(), getComponentHeight());
+            //setBounds(bounds.x - planetSpeed, bounds.getBounds().y, getComponentWidth(), getComponentHeight());
         } else if (this.state.equals(SpaceObjectState.AGOZNIZING)) {
             Point absCenter = getAbsoluteCenter();
             repeatNr++;
-            int actDiameter = diameter + calcExplodedCenterDistance() * 2 + strokesize * 2;
+            int actDiameter = origDiameter + calcExplodedCenterDistance() * 2 + strokesize * 2;
             setBoundsAroundCenter(absCenter, actDiameter, actDiameter);
             repaint();
             if (repeatNr >= maxRepeatNr) {

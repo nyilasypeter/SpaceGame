@@ -7,7 +7,6 @@ package com.progmatic.spacegame.spaceobjects.enemy;
 
 import com.progmatic.spacegame.SpaceObjectState;
 import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
-import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -97,7 +96,6 @@ public class GrowShrinkStar extends RightToLeftSpaceObject {
     @Override
     public int getComponentWidth() {
         //if (state.equals(SpaceObjectState.AGOZNIZING)) {
-        System.out.println(actDiameter);
         return (actDiameter * 2 + 2);
         //}
         //return (radius * 2);

@@ -73,26 +73,6 @@ public class Spaceship extends SpaceObject implements Hitable {
         return 100;
     }
 
-    /**
-     * First attempt, TODO make it more precise...
-     *
-     * @param p
-     * @return
-     */
-    public boolean collided(SpaceObject so) {
-        if (so instanceof Planet) {
-            Planet p = (Planet) so;
-            Point planetCenter = p.getAbsoluteCenter();
-            int panelDiameter = p.getDiameter();
-            Point myCenter = getMyCenter();
-            int myDiameter = 100;
-            double distance = planetCenter.distance(myCenter);
-            return distance < panelDiameter / 2 + myDiameter / 2;
-        } //implement this if there are other SpaceObjects....
-        else {
-            return true;
-        }
-    }
 
     public Point getMyCenter() {
         Rectangle bounds = getBounds();
@@ -114,7 +94,7 @@ public class Spaceship extends SpaceObject implements Hitable {
 
     @Override
     public void handleCollision(SpaceObject other) {
-        if(other instanceof Planet){
+        if(other instanceof RightToLeftSpaceObject){
             life--;
         }
         else if(other instanceof Gift){

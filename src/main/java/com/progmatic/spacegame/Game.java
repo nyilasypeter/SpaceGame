@@ -21,7 +21,7 @@ public class Game {
                 MainGameFrame frame = new MainGameFrame();
                 frame.init();
                 frame.addSpaceShip();
-                frame.addGrowShrinkStar();
+                //frame.addGrowShrinkStar();
                 frame.setVisible(true);
             }
         });

@@ -75,7 +75,7 @@ public class MainGameFrame extends JFrame {
 
     public void addGrowShrinkStar() {
         GrowShrinkStar b = new GrowShrinkStar();
-        b.setBounds(500, 500, b.getComponentWidth(), b.getComponentHeight());
+        b.setBounds(200, 200, b.getComponentWidth(), b.getComponentHeight());
         add(b);
         b.startToExplode();
     }
@@ -139,10 +139,10 @@ public class MainGameFrame extends JFrame {
             } else {
                 if (so.getState().equals(SpaceObjectState.ALIVE)) {
                     so.move();
-                    if (CollisionChecker.collided(so, sp)) {
-                        so.handleCollision(sp);
-                        sp.handleCollision(so);
-                    }
+//                    if (CollisionChecker.collided(so, sp)) {
+//                        so.handleCollision(sp);
+//                        sp.handleCollision(so);
+//                    }
                     checkHit(so);
                 } else if (so.getState().equals(SpaceObjectState.AGOZNIZING)) {
                     so.move();
