@@ -175,12 +175,9 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     public void move() {
         if (this.state.equals(SpaceObjectState.ALIVE)) {
             Point center = getAbsoluteCenter();
-            calcDiameter();
-            Rectangle bounds = getBounds();
-            
+            calcDiameter();            
             center.x = center.x-planetSpeed;
             setBoundsAroundCenter(center, getComponentWidth(), getComponentHeight());
-            //setBounds(bounds.x - planetSpeed, bounds.getBounds().y, getComponentWidth(), getComponentHeight());
         } else if (this.state.equals(SpaceObjectState.AGOZNIZING)) {
             Point absCenter = getAbsoluteCenter();
             repeatNr++;
