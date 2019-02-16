@@ -25,6 +25,11 @@ public class Gold extends Gift{
     public Gold() {
         this.value = r.nextInt(50)+100;
     }
+
+    public Gold(int value) {
+        this.value = value;
+    }
+    
     
     
 

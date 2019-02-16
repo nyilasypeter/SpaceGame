@@ -34,6 +34,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     private int diameter;
     private final int strokesize;
     private final Color color;
+    private final Color thornColor;
     private final Gift gift;
 
     private int repeatNr = 0;
@@ -41,7 +42,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
 
     private final int explodedDiameter;
     private final int maxRepeatNr = 75;//15
-    private final int maxThornRepeatNr = 75;
+    private final int maxThornRepeatNr = 150;
     private final int nrOfPieces = 10;
 
     private final int nrOfThorns;
@@ -60,12 +61,13 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         this.strokesize = 0;
         this.sizeToGrow = r.nextInt(origDiameter) + 50;
         this.color = randomColor();
+        this.thornColor = randomColor();
         this.nrOfThorns = r.nextInt(5) + 7;
         int giftType = r.nextInt(4);
-        if (giftType >= 3) {
+        if (giftType >= 2) {
             gift = new Life();
         } else {
-            gift = new Gold();
+            gift = new Gold(r.nextInt(100)+200);
         }
     }
 
@@ -114,22 +116,27 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     }
 
     private void paintThorns(Graphics g) {
-        g.setColor(Color.RED);
+        g.setColor(thornColor);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(strokesize));
         Point center = getRelativeCenter();
         int startAngle = 0;
         int angleGrow = 360 / nrOfThorns;
-        int swingStartAngle = 90 + angleGrow / 2;
         for (int i = 0; i < nrOfThorns; i++) {
             Point cp = calcCenterOfExplodingPiece(center, diameter/2, startAngle);
-            Point lp = calcCenterOfExplodingPiece(center, origDiameter, startAngle - angleGrow /2);
-            Point rp = calcCenterOfExplodingPiece(center, origDiameter, startAngle + angleGrow /2);
+            Point lp = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle - angleGrow /3);
+            Point rp = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle + angleGrow /3);
             g.fillPolygon(new int[]{cp.x, lp.x, rp.x}, new int[]{cp.y, lp.y, rp.y}, 3);
-            g.drawLine(cp.x, cp.y, center.x, center.y);
+            
+            int diameterIn = origDiameter-(diameter-origDiameter);
+            Point lpIn = calcCenterOfExplodingPiece(center, diameterIn/2, startAngle - angleGrow /3);
+            Point rpIn = calcCenterOfExplodingPiece(center, diameterIn/2, startAngle + angleGrow /3);
+            g.fillPolygon(new int[]{cp.x, lpIn.x, rpIn.x}, new int[]{cp.y, lpIn.y, rpIn.y}, 3);
+            
+//            Point lpFun = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle - angleGrow /2);
+//            Point rpFun = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle + angleGrow /2);
+//            g.fillPolygon(new int[]{cp.x, lpFun.x, rpFun.x}, new int[]{cp.y, lpFun.y, rpFun.y}, 3);
             startAngle += angleGrow;
-            swingStartAngle -= angleGrow;
-
         }
     }
 
