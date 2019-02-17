@@ -58,7 +58,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         this.bulletResistance = (origDiameter / 50) + 2;
         this.explodedDiameter = origDiameter + 50;
         this.planetSpeed = r.nextInt(5) + 1;
-        this.strokesize = 0;
+        this.strokesize = 1;
         this.sizeToGrow = r.nextInt(origDiameter) + 50;
         this.color = randomColor();
         this.thornColor = randomColor();
@@ -67,7 +67,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         if (giftType >= 2) {
             gift = new Life();
         } else {
-            gift = new Gold(r.nextInt(100)+200);
+            gift = new Gold(r.nextInt(100) + 200);
         }
     }
 
@@ -77,18 +77,12 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
 
     private void calcDiameter() {
         growShinkCounter++;
-        if (growShinkCounter == maxThornRepeatNr) {
+        if (growShinkCounter > maxThornRepeatNr) {
             growShinkCounter = 0;
             diameter = origDiameter;
         } else {
             double thornStep = calcThornStep();
-            diameter += thornStep;//(int) (thornStep*growShinkCounter) + origDiameter;
-            /*double growRatio = (double) sizeToGrow / 50d;
-            //int grow = (int) (diameter + growRatio);
-            int grow = 1;
-            grow = Math.max(grow, 1);
-            diameter += grow;
-            diameter = Math.min(diameter, origDiameter + sizeToGrow);*/
+            diameter += thornStep;
         }
     }
 
@@ -123,16 +117,16 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         int startAngle = 0;
         int angleGrow = 360 / nrOfThorns;
         for (int i = 0; i < nrOfThorns; i++) {
-            Point cp = calcCenterOfExplodingPiece(center, diameter/2, startAngle);
-            Point lp = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle - angleGrow /3);
-            Point rp = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle + angleGrow /3);
+            Point cp = calcCenterOfExplodingPiece(center, diameter / 2, startAngle);
+            Point lp = calcCenterOfExplodingPiece(center, origDiameter / 2, startAngle - angleGrow / 3);
+            Point rp = calcCenterOfExplodingPiece(center, origDiameter / 2, startAngle + angleGrow / 3);
             g.fillPolygon(new int[]{cp.x, lp.x, rp.x}, new int[]{cp.y, lp.y, rp.y}, 3);
-            
-            int diameterIn = origDiameter-(diameter-origDiameter);
-            Point lpIn = calcCenterOfExplodingPiece(center, diameterIn/2, startAngle - angleGrow /3);
-            Point rpIn = calcCenterOfExplodingPiece(center, diameterIn/2, startAngle + angleGrow /3);
+
+            int diameterIn = origDiameter - (diameter - origDiameter);
+            Point lpIn = calcCenterOfExplodingPiece(center, diameterIn / 2, startAngle - angleGrow / 3);
+            Point rpIn = calcCenterOfExplodingPiece(center, diameterIn / 2, startAngle + angleGrow / 3);
             g.fillPolygon(new int[]{cp.x, lpIn.x, rpIn.x}, new int[]{cp.y, lpIn.y, rpIn.y}, 3);
-            
+
 //            Point lpFun = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle - angleGrow /2);
 //            Point rpFun = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle + angleGrow /2);
 //            g.fillPolygon(new int[]{cp.x, lpFun.x, rpFun.x}, new int[]{cp.y, lpFun.y, rpFun.y}, 3);
@@ -141,14 +135,15 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     }
 
     private void paintExplodedPlanet(Graphics g) {
+        Point center = getRelativeCenter();
+        diameter = origDiameter;
         int centerDist = calcExplodedCenterDistance();
         int startAngle = 0;
         int angleGrow = 360 / nrOfPieces;
         int swingStartAngle = 90 + angleGrow / 2;
-        Point center = getRelativeCenter();
         g.setColor(color);
         Graphics2D g2 = (Graphics2D) g;
-        //g2.setStroke(new BasicStroke(strokesize));
+        g2.setStroke(new BasicStroke(strokesize));
         for (int i = 0; i < nrOfPieces; i++) {
             Point cp = calcCenterOfExplodingPiece(center, centerDist, startAngle);
             paintArcAorundPoint(cp.x, cp.y, origDiameter, swingStartAngle, -1 * angleGrow, true, g);
@@ -202,10 +197,10 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
         double step = (double) diff / maxRepeatNr;
         return step;
     }
-    
+
     private double calcThornStep() {
         double step = (double) sizeToGrow / maxThornRepeatNr;
-        if((int)step==0){
+        if ((int) step == 0) {
             step = 1d;
         }
         return step;
@@ -215,11 +210,13 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     public void move() {
         if (this.state.equals(SpaceObjectState.ALIVE)) {
             Point center = getAbsoluteCenter();
+            System.out.println("absolute center in ALIVE state:" + center);
             calcDiameter();
             center.x = center.x - planetSpeed;
             setBoundsAroundCenter(center, getComponentWidth(), getComponentHeight());
         } else if (this.state.equals(SpaceObjectState.AGOZNIZING)) {
             Point absCenter = getAbsoluteCenter();
+            System.out.println("absolute center in AGOZNIZING state:" + absCenter);
             repeatNr++;
             int actDiameter = origDiameter + calcExplodedCenterDistance() * 2 + strokesize * 2;
             setBoundsAroundCenter(absCenter, actDiameter, actDiameter);

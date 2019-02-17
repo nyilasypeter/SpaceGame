@@ -5,6 +5,7 @@
  */
 package com.progmatic.spacegame.spaceobjects.enemy;
 
+import com.progmatic.spacegame.SpaceObjectState;
 import java.awt.Point;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,22 +19,22 @@ import static org.junit.Assert.*;
  * @author peti
  */
 public class GrowShrinkPlanetTest {
-    
+
     public GrowShrinkPlanetTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -80,8 +81,18 @@ public class GrowShrinkPlanetTest {
             gp.move();
             Point actAbsoluteCenter = gp.getAbsoluteCenter();
             assertEquals(absoluteCenter.y, actAbsoluteCenter.y, 1);
-            //assertNotEquals(x, gp.getBounds().x);
+            assertNotEquals(x, gp.getBounds().x);
             x = actAbsoluteCenter.x;
+        }
+        Point centerBeforeAgonoizing = gp.getAbsoluteCenter();
+        gp.setState(SpaceObjectState.AGOZNIZING);
+        for (int i = 0; i < 100; i++) {
+            if (gp.getState().equals(SpaceObjectState.AGOZNIZING)) {
+                gp.move();
+                Point actAbsoluteCenter = gp.getAbsoluteCenter();
+                assertEquals(centerBeforeAgonoizing, actAbsoluteCenter);
+                x = actAbsoluteCenter.x;
+            }
         }
     }
 
@@ -98,5 +109,5 @@ public class GrowShrinkPlanetTest {
     @Test
     public void testCreateGiftAfterDying() {
     }
-    
+
 }

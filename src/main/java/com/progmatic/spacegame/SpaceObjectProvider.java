@@ -41,7 +41,7 @@ public class SpaceObjectProvider {
         
         spaceObjectsPerLevel.put(1, new RandomProvider(
                 new Pair<>(GrowShrinkPlanet.class.getName(), 100)));
-        nrOfSpaceObjectsPerLevel.put(1, 6);
+        nrOfSpaceObjectsPerLevel.put(1, 1);
         
         spaceObjectsPerLevel.put(2, new RandomProvider(
                 new Pair<>(Planet.class.getName(), 70),
