@@ -51,6 +51,8 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
 
     private int growShinkCounter = 0;
     private final int sizeToGrow;
+    
+    private Point absCent;
 
     public GrowShrinkPlanet() {
         this.origDiameter = r.nextInt(150) + 30;
@@ -74,6 +76,32 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     private Color randomColor() {
         return Color.getHSBColor(r.nextFloat(), r.nextFloat(), r.nextFloat());
     }
+
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        super.setBounds(x, y, width, height); 
+        initAbsoluteCenter();
+    }
+    
+    
+
+    @Override
+    public void setBounds(Rectangle r) {
+        super.setBounds(r); //To change body of generated methods, choose Tools | Templates. 
+        initAbsoluteCenter();
+    }
+    
+    private void initAbsoluteCenter(){
+        if(absCent == null){
+            Rectangle bounds = getBounds();
+            Point location = bounds.getLocation();
+            location.x += bounds.width / 2;
+            location.y += bounds.height / 2;
+            absCent = location;
+        }
+    }
+    
+    
 
     private void calcDiameter() {
         growShinkCounter++;
@@ -209,17 +237,13 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     @Override
     public void move() {
         if (this.state.equals(SpaceObjectState.ALIVE)) {
-            Point center = getAbsoluteCenter();
-            System.out.println("absolute center in ALIVE state:" + center);
             calcDiameter();
-            center.x = center.x - planetSpeed;
-            setBoundsAroundCenter(center, getComponentWidth(), getComponentHeight());
+            absCent.x = absCent.x - planetSpeed;
+            setBoundsAroundCenter(absCent, getComponentWidth(), getComponentHeight());
         } else if (this.state.equals(SpaceObjectState.AGOZNIZING)) {
-            Point absCenter = getAbsoluteCenter();
-            System.out.println("absolute center in AGOZNIZING state:" + absCenter);
             repeatNr++;
             int actDiameter = origDiameter + calcExplodedCenterDistance() * 2 + strokesize * 2;
-            setBoundsAroundCenter(absCenter, actDiameter, actDiameter);
+            setBoundsAroundCenter(absCent, actDiameter, actDiameter);
             repaint();
             if (repeatNr >= maxRepeatNr) {
                 repaint();
@@ -237,10 +261,9 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
 
     @Override
     public SpaceObject createGiftAfterDying() {
-        Point center = getAbsoluteCenter();
         gift.setBounds(
-                center.x - gift.getComponentWidth() / 2,
-                center.y - gift.getComponentHeight() / 2,
+                absCent.x - gift.getComponentWidth() / 2,
+                absCent.y - gift.getComponentHeight() / 2,
                 gift.getComponentWidth(),
                 gift.getComponentHeight());
         return gift;
