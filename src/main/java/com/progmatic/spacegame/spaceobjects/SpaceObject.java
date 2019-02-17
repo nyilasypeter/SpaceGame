@@ -45,6 +45,12 @@ public abstract class SpaceObject extends JComponent {
             g.drawOval(swingX, swingY, diameter, diameter);
         }
     }
+    
+    protected Point calcPointFromOhterPointByAngle(Point from, int distance, double angle) {
+        int x = (int) (Math.sin(Math.toRadians(angle)) * distance);
+        int y = (int) (Math.cos(Math.toRadians(angle)) * distance);
+        return new Point(from.x + x, from.y - y);
+    }
 
     protected void paintArcAorundPoint(int x, int y, int diameter, int startAngle, int arcAngle, Graphics g) {
         paintArcAorundPoint(x, y, diameter, startAngle, arcAngle, false, g);

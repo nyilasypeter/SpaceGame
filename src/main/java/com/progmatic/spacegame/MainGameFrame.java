@@ -16,6 +16,7 @@ import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.listeners.MainFrameComponentListener;
 import com.progmatic.spacegame.listeners.SpaceshipDirectKeyListener;
+import com.progmatic.spacegame.spaceobjects.enemy.FiringEnemy;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -144,6 +145,17 @@ public class MainGameFrame extends JFrame {
 //                        sp.handleCollision(so);
 //                    }
                     checkHit(so);
+                    if(so instanceof FiringEnemy){
+                        FiringEnemy enemy = (FiringEnemy) so;
+                        List<Projectile> projectiles = enemy.getProjectiles();
+                        if(projectiles != null){
+                            for (Projectile projectile : projectiles) {
+                                this.add(projectile);
+                                li.add(projectile);
+                            }
+                        }
+                    }
+                    repaint();
                 } else if (so.getState().equals(SpaceObjectState.AGOZNIZING)) {
                     so.move();
                 } else if (so.getState().equals(SpaceObjectState.DEAD)) {

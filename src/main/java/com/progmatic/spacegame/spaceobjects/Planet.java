@@ -114,7 +114,7 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(strokesize));
         for (int i = 0; i < nrOfPieces; i++) {
-            Point cp = calcCenterOfExplodingPiece(center, centerDist, startAngle);
+            Point cp = calcPointFromOhterPointByAngle(center, centerDist, startAngle);
             paintArcAorundPoint(cp.x, cp.y, diameter, swingStartAngle, -1 * angleGrow, true, g);
             startAngle += angleGrow;
             swingStartAngle -= angleGrow;
@@ -133,7 +133,7 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
                 center = getRelativeCenter();
                 g.setColor(extraCircleColors[j]);
                 for (int i = 0; i < nrOfPieces; i++) {
-                    Point cp = calcCenterOfExplodingPiece(center, centerDist, startAngle);
+                    Point cp = calcPointFromOhterPointByAngle(center, centerDist, startAngle);
                     paintArcAorundPoint(cp.x, cp.y, nextDiam, swingStartAngle, -1 * angleGrow, false, g);
                     startAngle += angleGrow;
                     swingStartAngle -= angleGrow;
@@ -170,12 +170,7 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     public int getComponentHeight() {
         return getComponentWidth();
     }
-    
-    private Point calcCenterOfExplodingPiece(Point center, int distance, double angle) {
-        int x = (int) (Math.sin(Math.toRadians(angle)) * distance);
-        int y = (int) (Math.cos(Math.toRadians(angle)) * distance);
-        return new Point(center.x + x, center.y - y);
-    }
+
     
     
     private int calcExplodedCenterDistance() {

@@ -41,11 +41,11 @@ public class SpaceObjectProvider {
         
         spaceObjectsPerLevel.put(1, new RandomProvider(
                 new Pair<>(GrowShrinkPlanet.class.getName(), 100)));
-        nrOfSpaceObjectsPerLevel.put(1, 1);
+        nrOfSpaceObjectsPerLevel.put(1, 5);
         
         spaceObjectsPerLevel.put(2, new RandomProvider(
                 new Pair<>(Planet.class.getName(), 70),
-                new Pair<>(GrowShrinkStar.class.getName(), 30)));
+                new Pair<>(GrowShrinkPlanet.class.getName(), 30)));
         nrOfSpaceObjectsPerLevel.put(2, 6);
     
     }
@@ -87,7 +87,7 @@ public class SpaceObjectProvider {
             return createRandomGrowShrinkStar();
         }
         else if(GrowShrinkPlanet.class.getName().equals(className)){
-            return createRandomPlanet1();
+            return createRandomGrowShrinkPlanet();
         }
         else{
             throw new RuntimeException("unknown spaceobject returned by RandomProvider.getRandomString(): " + className);
@@ -100,20 +100,20 @@ public class SpaceObjectProvider {
         return p;
     }
     
-    private GrowShrinkPlanet createRandomPlanet1() {
+    private GrowShrinkPlanet createRandomGrowShrinkPlanet() {
         GrowShrinkPlanet p = new GrowShrinkPlanet();
-        //setRandomBounds(p);
-         p.setBounds(
-                r.nextInt(sizeOfGameField.width),
-                r.nextInt(sizeOfGameField.height) - p.getComponentHeight() / 2,
-                p.getComponentWidth(),
-                p.getComponentHeight());
+        setRandomBounds(p);
+         
         return p;
     }
     
     private GrowShrinkStar createRandomGrowShrinkStar() {
         GrowShrinkStar p = new GrowShrinkStar();
-        setRandomBounds(p);
+        p.setBounds(
+                r.nextInt(sizeOfGameField.width/2) + sizeOfGameField.width,
+                r.nextInt(sizeOfGameField.height/2) - p.getComponentHeight() / 2,
+                p.getComponentWidth(),
+                p.getComponentHeight());
         return p;
     }
     

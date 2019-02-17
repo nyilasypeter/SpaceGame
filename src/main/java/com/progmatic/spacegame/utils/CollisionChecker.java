@@ -9,6 +9,7 @@ import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Arc2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -21,20 +22,39 @@ public class CollisionChecker {
         Shape apprShape = so1.getApproximationShape();
         Shape apprShape2 = so2.getApproximationShape();
         if (apprShape != null && apprShape2 != null) {
+            //oval, oval
             if (apprShape instanceof Arc2D && apprShape2 instanceof Arc2D) {
                 Arc2D a1 = (Arc2D) apprShape;
                 Arc2D a2 = (Arc2D) apprShape2;
                 return ovalsCollided(a1, a2);
-            } else if (apprShape instanceof Rectangle2D && apprShape2 instanceof Rectangle2D) {
+            }
+            //rectangle, rectangle
+            else if (apprShape instanceof Rectangle2D && apprShape2 instanceof Rectangle2D) {
                 Rectangle2D r1 = (Rectangle2D) apprShape;
                 Rectangle2D r2 = (Rectangle2D) apprShape2;
                 return r1.intersects(r2);
             }
+            //rectangle, oval
             Shape[] sos = isInstanceOf(apprShape, apprShape2, Arc2D.class, Rectangle2D.class);
             if (sos != null) {
                 Arc2D a2 = (Arc2D) sos[0];
                 Rectangle2D r = (Rectangle2D) sos[1];
                 return a2.intersects(r);
+            }
+            //oval, line
+            //TODO make it smarter
+            sos =isInstanceOf(apprShape, apprShape2, Arc2D.class, Line2D.class);
+            if (sos != null) {
+                Arc2D arc = (Arc2D) sos[0];
+                Line2D line = (Line2D) sos[1];
+                return arc.getBounds2D().intersectsLine(line);
+            }
+            //rectangle, line
+            sos =isInstanceOf(apprShape, apprShape2, Rectangle2D.class, Line2D.class);
+            if (sos != null) {
+                Rectangle2D rect = (Rectangle2D) sos[0];
+                Line2D line = (Line2D) sos[1];
+                return rect.intersectsLine(line);
             }
             throw new RuntimeException(String.format("Collision detection is not supported for these shapes: %s, and: %s", 
                     apprShape.getClass().getName(),
