@@ -140,10 +140,10 @@ public class MainGameFrame extends JFrame {
             } else {
                 if (so.getState().equals(SpaceObjectState.ALIVE)) {
                     so.move();
-//                    if (CollisionChecker.collided(so, sp)) {
-//                        so.handleCollision(sp);
-//                        sp.handleCollision(so);
-//                    }
+                    if (CollisionChecker.collided(so, sp)) {
+                        so.handleCollision(sp);
+                        sp.handleCollision(so);
+                    }
                     checkHit(so);
                     if(so instanceof FiringEnemy){
                         FiringEnemy enemy = (FiringEnemy) so;

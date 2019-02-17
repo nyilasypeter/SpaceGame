@@ -35,17 +35,13 @@ public class SpaceObjectProvider {
     
     
     static{
-//        spaceObjectsPerLevel.put(1, new RandomProvider(
-//                new Pair<>(Planet.class.getName(), 100)));
-//        nrOfSpaceObjectsPerLevel.put(1, 5);
-        
         spaceObjectsPerLevel.put(1, new RandomProvider(
-                new Pair<>(GrowShrinkPlanet.class.getName(), 100)));
+                new Pair<>(Planet.class.getName(), 100)));
         nrOfSpaceObjectsPerLevel.put(1, 5);
         
         spaceObjectsPerLevel.put(2, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 70),
-                new Pair<>(GrowShrinkPlanet.class.getName(), 30)));
+                new Pair<>(Planet.class.getName(), 75),
+                new Pair<>(GrowShrinkPlanet.class.getName(), 25)));
         nrOfSpaceObjectsPerLevel.put(2, 6);
     
     }
