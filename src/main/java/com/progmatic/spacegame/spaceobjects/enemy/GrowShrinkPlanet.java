@@ -57,7 +57,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     public GrowShrinkPlanet() {
         this.origDiameter = r.nextInt(150) + 30;
         this.diameter = origDiameter;
-        this.bulletResistance = (origDiameter / 50) + 2;
+        this.bulletResistance = (origDiameter / 50) + 10;
         this.explodedDiameter = origDiameter + 50;
         this.planetSpeed = r.nextInt(5) + 1;
         this.strokesize = 1;
@@ -87,7 +87,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
 
     @Override
     public void setBounds(Rectangle r) {
-        super.setBounds(r); //To change body of generated methods, choose Tools | Templates. 
+        super.setBounds(r); 
         initAbsoluteCenter();
     }
     
@@ -130,11 +130,8 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
     private void paintPlanet(Graphics g) {
         g.setColor(color);
         Graphics2D g2 = (Graphics2D) g;
-        //g2.setStroke(new BasicStroke(strokesize));
         Point center = getRelativeCenter();
         paintCircleAroundPoint(center.x, center.y, origDiameter, true, g);
-        //g.fillOval(0, 0, origDiameter, origDiameter);
-
     }
 
     private void paintThorns(Graphics g) {
@@ -155,9 +152,6 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable 
             Point rpIn = calcCenterOfExplodingPiece(center, diameterIn / 2, startAngle + angleGrow / 3);
             g.fillPolygon(new int[]{cp.x, lpIn.x, rpIn.x}, new int[]{cp.y, lpIn.y, rpIn.y}, 3);
 
-//            Point lpFun = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle - angleGrow /2);
-//            Point rpFun = calcCenterOfExplodingPiece(center, origDiameter/2, startAngle + angleGrow /2);
-//            g.fillPolygon(new int[]{cp.x, lpFun.x, rpFun.x}, new int[]{cp.y, lpFun.y, rpFun.y}, 3);
             startAngle += angleGrow;
         }
     }
