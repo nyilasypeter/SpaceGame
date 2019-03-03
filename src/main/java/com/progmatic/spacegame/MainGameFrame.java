@@ -41,7 +41,7 @@ public class MainGameFrame extends JFrame {
     private InfoObject infoObject;
     private Timer mainAnimator;
     private boolean initialized = false;
-    private int actLevel = 1;
+    private int actLevel = 3;
     private SpaceshipDirectKeyListener skListener;
     private NextLevelMenu nextLevMenu;
     private GameOverMenu goMenu;
@@ -250,15 +250,22 @@ public class MainGameFrame extends JFrame {
     private void checkHit(SpaceObject so) {
         if (so instanceof Projectile) {
             Projectile projectile = (Projectile) so;
-            for (SpaceObject spaceObject : spaceObjects) {
-                if (spaceObject.getState().equals(SpaceObjectState.ALIVE) && spaceObject instanceof Hitable) {
-                    Hitable hitable = (Hitable) spaceObject;
-                    if (CollisionChecker.collided(projectile, spaceObject)) {
-                        hitable.beingHit(projectile.damage());
-                        projectile.hitTheTarget();
+            if(projectile.getState().equals(SpaceObjectState.ALIVE)){
+                for (SpaceObject spaceObject : spaceObjects) {
+                    if (spaceObject.getState().equals(SpaceObjectState.ALIVE) && spaceObject instanceof Hitable) {
+                        Hitable hitable = (Hitable) spaceObject;
+                        if (CollisionChecker.collided(projectile, spaceObject)) {
+                            hitable.beingHit(projectile.damage());
+                            projectile.hitTheTarget();
+                        }
                     }
                 }
+                if(CollisionChecker.collided(projectile, sp)){
+                    sp.beingHit(projectile.damage());
+                    projectile.hitTheTarget();
+                }
             }
+           
         }
     }
 

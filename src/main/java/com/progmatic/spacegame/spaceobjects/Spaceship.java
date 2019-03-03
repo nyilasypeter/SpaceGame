@@ -96,10 +96,12 @@ public class Spaceship extends SpaceObject implements Hitable {
     public void handleCollision(SpaceObject other) {
         if (other instanceof RightToLeftSpaceObject) {
             life--;
-        } else if (other instanceof Projectile) {
-            Projectile p = (Projectile) other;
-            life -= p.damage();
-        } else if (other instanceof Gift) {
+        } 
+//        else if (other instanceof Projectile) {
+//            Projectile p = (Projectile) other;
+//            life -= p.damage();
+//        } 
+        else if (other instanceof Gift) {
             Gift g = (Gift) other;
             score += g.getValue();
 
@@ -140,7 +142,7 @@ public class Spaceship extends SpaceObject implements Hitable {
 
     @Override
     public void beingHit(int damage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        life -= damage;
     }
 
     public int getNrOfMissiles() {
