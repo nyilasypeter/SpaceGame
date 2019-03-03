@@ -9,7 +9,6 @@ import com.progmatic.spacegame.infoobjects.GameOverMenu;
 import com.progmatic.spacegame.infoobjects.InfoObject;
 import com.progmatic.spacegame.infoobjects.NextLevelMenu;
 import com.progmatic.spacegame.utils.CollisionChecker;
-import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.Spaceship;
 import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
@@ -36,6 +35,7 @@ import javax.swing.Timer;
 public class MainGameFrame extends JFrame {
 
     private Spaceship sp;
+    private Spaceship.SpaceShipInfo spAtBegOfLastLevel;
 
     private final List<SpaceObject> spaceObjects = Collections.synchronizedList(new ArrayList<>());
     private InfoObject infoObject;
@@ -44,8 +44,7 @@ public class MainGameFrame extends JFrame {
     private int actLevel = 1;
     private SpaceshipDirectKeyListener skListener;
     private NextLevelMenu nextLevMenu;
-
-    private static final int[] LEVEL_SCORES = {1000, 2000, 3000};
+    private GameOverMenu goMenu;
 
     public MainGameFrame() {
     }
@@ -66,19 +65,15 @@ public class MainGameFrame extends JFrame {
 
     public void addSpaceShip() {
         sp = new Spaceship();
+       
         sp.setBounds(100, 100, sp.getComponentWidth(), sp.getComponentHeight());
         add(sp);
         skListener = new SpaceshipDirectKeyListener(sp, getContentPane().getSize(), this);
         addKeyListener(skListener);
         MainFrameComponentListener mfcl = new MainFrameComponentListener(skListener);
         addComponentListener(mfcl);
-    }
-
-    public void addGrowShrinkStar() {
-        GrowShrinkStar b = new GrowShrinkStar();
-        b.setBounds(200, 200, b.getComponentWidth(), b.getComponentHeight());
-        add(b);
-        b.startToExplode();
+        spAtBegOfLastLevel = sp.spaceShipInfo();
+        
     }
 
     public void addBullet(Projectile b) {
@@ -180,7 +175,7 @@ public class MainGameFrame extends JFrame {
         if (sp.getLife() == 0) {
             gameOver();
         }
-        if (getLevelByScore(sp.getScore()) > actLevel) {
+        if (SpaceObjectProvider.instance().getLevelByScore(sp.getScore()) > actLevel) {
             showNextLevelMenu();
         }
         infoObject.repaint();
@@ -189,14 +184,39 @@ public class MainGameFrame extends JFrame {
     public void gameOver() {
         mainAnimator.stop();
         Rectangle frameBounds = getBounds();
-        GameOverMenu goMenu = new GameOverMenu();
+        goMenu = new GameOverMenu(actLevel);
         add(goMenu, 1);
         goMenu.setBounds(frameBounds.width / 2 - goMenu.getWidth() / 2,
                 frameBounds.height / 2 - goMenu.getHeight() / 2,
                 goMenu.getWidth(),
                 goMenu.getHeight());
         goMenu.repaint();
+        skListener.setInGameOverMenu();
 
+    }
+    
+    public void restart(boolean fromBeginning){
+        if(fromBeginning){
+            actLevel = 1;
+        }
+        SpaceObjectProvider.instance().setLevel(actLevel);
+        for (SpaceObject spaceObject : spaceObjects) {
+            remove(spaceObject);
+        }
+        spaceObjects.clear();
+        initialized = false;
+        initializeIfNeeded();
+        remove(goMenu);
+        if(fromBeginning){ 
+            sp.setLife(4);
+            sp.setNrOfMissiles(4);
+        }
+        else{
+            sp.setLife(spAtBegOfLastLevel.getLife());
+            sp.setNrOfMissiles(spAtBegOfLastLevel.getNrOfMissiles());
+            sp.setScore(spAtBegOfLastLevel.getScore());
+        }
+        repaint();
     }
 
     private void showNextLevelMenu() {
@@ -223,6 +243,7 @@ public class MainGameFrame extends JFrame {
         initializeIfNeeded();
         remove(nextLevMenu);
         sp.setLife(Math.max(sp.getLife(), 4));
+        spAtBegOfLastLevel = sp.spaceShipInfo();
         repaint();
     }
 
@@ -241,13 +262,6 @@ public class MainGameFrame extends JFrame {
         }
     }
 
-    private int getLevelByScore(int score) {
-        for (int i = 0; i < LEVEL_SCORES.length; i++) {
-            if (score <= LEVEL_SCORES[i]) {
-                return i + 1;
-            }
-        }
-        return LEVEL_SCORES.length + 1;
-    }
+    
 
 }

@@ -7,6 +7,7 @@ package com.progmatic.spacegame.spaceobjects;
 
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
+import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Bullet;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.projectile.Missile;
@@ -28,7 +29,7 @@ public class Spaceship extends SpaceObject implements Hitable {
     private static final Color WINDOW_COLOR_ALIVE = Color.decode("#e9f409");//#f3ff00
     private static final Color WINDOW_COLOR_DEAD = Color.BLACK;
 
-    private int life = 4 ;
+    private int life = 4;
     private int nrOfMissiles = 4;
     private int score = 0;
 
@@ -73,7 +74,6 @@ public class Spaceship extends SpaceObject implements Hitable {
         return 100;
     }
 
-
     public Point getMyCenter() {
         Rectangle bounds = getBounds();
         Point ret = new Point(bounds.x + 50, bounds.y + 50);
@@ -94,19 +94,20 @@ public class Spaceship extends SpaceObject implements Hitable {
 
     @Override
     public void handleCollision(SpaceObject other) {
-        if(other instanceof RightToLeftSpaceObject){
+        if (other instanceof RightToLeftSpaceObject) {
             life--;
-        }
-        else if(other instanceof Projectile){
+        } else if (other instanceof Projectile) {
             Projectile p = (Projectile) other;
             life -= p.damage();
-        }
-        else if(other instanceof Gift){
+        } else if (other instanceof Gift) {
             Gift g = (Gift) other;
-            score+= g.getValue();
-            
-            if(g instanceof Life){
+            score += g.getValue();
+
+            if (g instanceof Life) {
                 this.life++;
+            } else if (g instanceof MissilePack) {
+                MissilePack mp = (MissilePack) g;
+                this.nrOfMissiles += mp.getNrOfMissiles();
             }
         }
     }
@@ -154,11 +155,42 @@ public class Spaceship extends SpaceObject implements Hitable {
         return score;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
+
     @Override
     public boolean isOutOfGameField(Rectangle rectangle) {
         return false;
     }
     
-    
+    public SpaceShipInfo spaceShipInfo(){
+        SpaceShipInfo si = new SpaceShipInfo();
+        si.score = this.score;
+        si.nrOfMissiles = this.nrOfMissiles;
+        si.life = this.life;
+        return si;
+    }
+
+    public class SpaceShipInfo {
+        private int score;
+        private int nrOfMissiles;
+        private int life;
+
+        public int getScore() {
+            return score;
+        }
+
+        public int getNrOfMissiles() {
+            return nrOfMissiles;
+        }
+
+        public int getLife() {
+            return life;
+        }
+        
+       
+    }
 
 }

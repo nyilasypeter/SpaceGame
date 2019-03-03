@@ -11,6 +11,7 @@ import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
+import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.projectile.LeaserBeam;
 import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
@@ -55,14 +56,14 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
 
     private int growShinkCounter = 0;
     private final int sizeToGrow;
-    
+
     private Point absCent;
-    
+
     private final int projectileLength;
     private final double projectileSpeed;
     private List<Projectile> projectiles;
 
-    public GrowShrinkPlanet() {
+    public GrowShrinkPlanet(int level) {
         this.origDiameter = r.nextInt(150) + 30;
         this.diameter = origDiameter;
         this.bulletResistance = (origDiameter / 50) + 10;
@@ -73,11 +74,13 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
         this.color = randomColor();
         this.thornColor = randomColor();
         this.nrOfThorns = r.nextInt(5) + 7;
-        int giftType = r.nextInt(4);
-        if (giftType >= 2) {
+        int giftType = r.nextInt(6) + 1;
+        if (giftType > 4) {
             gift = new Life();
-        } else {
+        } else if (giftType > 2) {
             gift = new Gold(r.nextInt(100) + 200);
+        } else {
+            gift = new MissilePack();
         }
         projectileSpeed = Math.max(0.1, r.nextDouble());
         projectileLength = r.nextInt(100) + 40;
@@ -89,20 +92,18 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
 
     @Override
     public void setBounds(int x, int y, int width, int height) {
-        super.setBounds(x, y, width, height); 
+        super.setBounds(x, y, width, height);
         initAbsoluteCenter();
     }
-    
-    
 
     @Override
     public void setBounds(Rectangle r) {
-        super.setBounds(r); 
+        super.setBounds(r);
         initAbsoluteCenter();
     }
-    
-    private void initAbsoluteCenter(){
-        if(absCent == null){
+
+    private void initAbsoluteCenter() {
+        if (absCent == null) {
             Rectangle bounds = getBounds();
             Point location = bounds.getLocation();
             location.x += bounds.width / 2;
@@ -110,8 +111,6 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
             absCent = location;
         }
     }
-    
-    
 
     private void calcDiameter() {
         growShinkCounter++;
@@ -151,9 +150,9 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
         Point center = getRelativeCenter();
         int startAngle = 0;
         int angleGrow = 360 / nrOfThorns;
-        if (growShinkCounter == maxThornRepeatNr-1) {
-                projectiles = new ArrayList<>();
-            }
+        if (growShinkCounter == maxThornRepeatNr - 1) {
+            projectiles = new ArrayList<>();
+        }
         for (int i = 0; i < nrOfThorns; i++) {
             Point cp = calcPointFromOhterPointByAngle(center, diameter / 2, startAngle);
             Point lp = calcPointFromOhterPointByAngle(center, origDiameter / 2, startAngle - angleGrow / 3);
@@ -164,8 +163,8 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
             Point lpIn = calcPointFromOhterPointByAngle(center, diameterIn / 2, startAngle - angleGrow / 3);
             Point rpIn = calcPointFromOhterPointByAngle(center, diameterIn / 2, startAngle + angleGrow / 3);
             g.fillPolygon(new int[]{cp.x, lpIn.x, rpIn.x}, new int[]{cp.y, lpIn.y, rpIn.y}, 3);
-            
-            if (growShinkCounter == maxThornRepeatNr-1) {
+
+            if (growShinkCounter == maxThornRepeatNr - 1) {
                 Point p = new Point();
                 Rectangle bounds = getBounds();
                 p.x = cp.x + bounds.x;
@@ -222,8 +221,6 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
     public int getComponentHeight() {
         return getComponentWidth();
     }
-
-    
 
     private int calcExplodedCenterDistance() {
         int ret = (int) (calcStep() * repeatNr);
@@ -282,7 +279,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
 
     @Override
     public List<Projectile> getProjectiles() {
-        if(projectiles != null){
+        if (projectiles != null) {
             List<Projectile> ret = projectiles;
             projectiles = null;
             return ret;

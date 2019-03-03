@@ -8,12 +8,10 @@ package com.progmatic.spacegame;
 import com.progmatic.spacegame.spaceobjects.Planet;
 import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
-import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkStar;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkPlanet;
+import com.progmatic.spacegame.utils.RandomProvider;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,25 +30,36 @@ public class SpaceObjectProvider {
     private final static Map<Integer, RandomProvider> spaceObjectsPerLevel = new HashMap<>();
     private final static Map<Integer, Integer> nrOfSpaceObjectsPerLevel = new HashMap<>();
     private int level = 1;
-    
-    
-    static{
+
+    private static final int[] LEVEL_SCORES = {2000, 4000, 6000, 10000};
+    //private static final int[] LEVEL_SCORES = {200, 400, 600, 10000};
+
+    static {
         spaceObjectsPerLevel.put(1, new RandomProvider(
                 new Pair<>(Planet.class.getName(), 100)));
         nrOfSpaceObjectsPerLevel.put(1, 5);
-        
+
         spaceObjectsPerLevel.put(2, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 75),
-                new Pair<>(GrowShrinkPlanet.class.getName(), 25)));
-        nrOfSpaceObjectsPerLevel.put(2, 6);
-    
+                new Pair<>(Planet.class.getName(), 100)));
+        nrOfSpaceObjectsPerLevel.put(2, 5);
+
+        spaceObjectsPerLevel.put(3, new RandomProvider(
+                new Pair<>(Planet.class.getName(), 82),
+                new Pair<>(GrowShrinkPlanet.class.getName(), 18)));
+        nrOfSpaceObjectsPerLevel.put(3, 6);
+
+        spaceObjectsPerLevel.put(4, new RandomProvider(
+                new Pair<>(Planet.class.getName(), 70),
+                new Pair<>(GrowShrinkPlanet.class.getName(), 30)));
+        nrOfSpaceObjectsPerLevel.put(4, 6);
+
     }
 
     private SpaceObjectProvider() {
         this.r = new Random();
     }
-    
-    public void configure(Dimension d){
+
+    public void configure(Dimension d) {
         this.sizeOfGameField = d;
     }
 
@@ -64,56 +73,41 @@ public class SpaceObjectProvider {
         }
         return null;
     }
-    
-    public List<SpaceObject> initSpaceObjects(){
+
+    public List<SpaceObject> initSpaceObjects() {
         List<SpaceObject> ret = new ArrayList<>();
         for (int i = 0; i < nrOfSpaceObjectsPerLevel.get(level); i++) {
             ret.add(createSpaceObject());
         }
         return ret;
     }
-    
-    private SpaceObject createSpaceObject(){
+
+    private SpaceObject createSpaceObject() {
         RandomProvider rp = spaceObjectsPerLevel.get(level);
         String className = rp.getRandomString();
-        if(Planet.class.getName().equals(className)){
+        if (Planet.class.getName().equals(className)) {
             return createRandomPlanet();
-        }
-        else if(GrowShrinkStar.class.getName().equals(className)){
-            return createRandomGrowShrinkStar();
-        }
-        else if(GrowShrinkPlanet.class.getName().equals(className)){
+        } else if (GrowShrinkPlanet.class.getName().equals(className)) {
             return createRandomGrowShrinkPlanet();
-        }
-        else{
+        } else {
             throw new RuntimeException("unknown spaceobject returned by RandomProvider.getRandomString(): " + className);
         }
     }
 
     private Planet createRandomPlanet() {
-        Planet p = new Planet();
+        Planet p = new Planet(level);
         setRandomBounds(p);
         return p;
     }
-    
+
     private GrowShrinkPlanet createRandomGrowShrinkPlanet() {
-        GrowShrinkPlanet p = new GrowShrinkPlanet();
+        GrowShrinkPlanet p = new GrowShrinkPlanet(level);
         setRandomBounds(p);
-         
+
         return p;
     }
-    
-    private GrowShrinkStar createRandomGrowShrinkStar() {
-        GrowShrinkStar p = new GrowShrinkStar();
-        p.setBounds(
-                r.nextInt(sizeOfGameField.width/2) + sizeOfGameField.width,
-                r.nextInt(sizeOfGameField.height/2) - p.getComponentHeight() / 2,
-                p.getComponentWidth(),
-                p.getComponentHeight());
-        return p;
-    }
-    
-    private void setRandomBounds(RightToLeftSpaceObject p){
+
+    private void setRandomBounds(RightToLeftSpaceObject p) {
         p.setBounds(
                 r.nextInt(sizeOfGameField.width) + sizeOfGameField.width,
                 r.nextInt(sizeOfGameField.height) - p.getComponentHeight() / 2,
@@ -128,41 +122,14 @@ public class SpaceObjectProvider {
     public void setLevel(int level) {
         this.level = level;
     }
-    
-    
-    
-    private static class RandomProvider{
-        
-        Pair<String, Integer>[] randomPairs;
-        Random r = new Random();
 
-        public RandomProvider(Pair<String, Integer>... randomPairs) {
-            int sum = 0;
-            for (Pair<String, Integer> randomPair : randomPairs) {
-                sum += randomPair.getValue();
+    public int getLevelByScore(int score) {
+        for (int i = 0; i < LEVEL_SCORES.length; i++) {
+            if (score <= LEVEL_SCORES[i]) {
+                return i + 1;
             }
-            if(sum != 100){
-                throw new RuntimeException("Sum of values must be 100 int RandomProvider's constructor");
-            }
-            this.randomPairs = randomPairs;
-            Arrays.sort(this.randomPairs, Comparator.comparing(p -> p.getValue()));
         }
-        
-        public String getRandomString(){
-            int rand = r.nextInt(100)+1;
-            int sum = 0;
-            for (Pair<String, Integer> pair : randomPairs) {
-                sum += pair.getValue();
-                if(rand <= sum){
-                    return pair.getKey();
-                }
-            }
-            throw new RuntimeException("Error in getRranodmString");
-        }
-        
-        
-        
-        
+        return LEVEL_SCORES.length + 1;
     }
 
 }
