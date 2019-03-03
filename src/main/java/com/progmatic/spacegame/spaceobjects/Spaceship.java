@@ -97,10 +97,6 @@ public class Spaceship extends SpaceObject implements Hitable {
         if (other instanceof RightToLeftSpaceObject) {
             life--;
         } 
-//        else if (other instanceof Projectile) {
-//            Projectile p = (Projectile) other;
-//            life -= p.damage();
-//        } 
         else if (other instanceof Gift) {
             Gift g = (Gift) other;
             score += g.getValue();
