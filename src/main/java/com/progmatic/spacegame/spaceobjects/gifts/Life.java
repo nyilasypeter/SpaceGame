@@ -32,11 +32,7 @@ public class Life extends Gift {
         this.baseRadius = baseRadius;
         this.raylength = raylength;
         this.nrOfRays = nrOfRays;
-    }
-
-    
-    
-    
+    }   
 
     @Override
     protected void paintComponent(Graphics g) {

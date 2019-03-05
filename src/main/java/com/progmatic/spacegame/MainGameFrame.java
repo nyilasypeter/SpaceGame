@@ -41,7 +41,7 @@ public class MainGameFrame extends JFrame {
     private InfoObject infoObject;
     private Timer mainAnimator;
     private boolean initialized = false;
-    private int actLevel = 3;
+    private int actLevel = 1;
     private SpaceshipDirectKeyListener skListener;
     private NextLevelMenu nextLevMenu;
     private GameOverMenu goMenu;

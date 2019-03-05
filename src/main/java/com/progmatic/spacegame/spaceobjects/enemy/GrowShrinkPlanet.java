@@ -15,6 +15,7 @@ import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.projectile.LeaserBeam;
 import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
+import com.progmatic.spacegame.utils.RandomProvider;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -24,8 +25,11 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import javafx.util.Pair;
 import javax.swing.Timer;
 
 /**
@@ -40,7 +44,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
     private final int strokesize;
     private final Color color;
     private final Color thornColor;
-    private final Gift gift;
+    private Gift gift;
 
     private int repeatNr = 0;
     private Timer t;
@@ -62,6 +66,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
     private final int projectileLength;
     private final double projectileSpeed;
     private List<Projectile> projectiles;
+    private final int level;
 
     public GrowShrinkPlanet(int level) {
         this.origDiameter = r.nextInt(150) + 30;
@@ -74,16 +79,10 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
         this.color = randomColor();
         this.thornColor = randomColor();
         this.nrOfThorns = r.nextInt(5) + 7;
-        int giftType = r.nextInt(6) + 1;
-        if (giftType > 4) {
-            gift = new Life();
-        } else if (giftType > 2) {
-            gift = new Gold(r.nextInt(100) + 200);
-        } else {
-            gift = new MissilePack();
-        }
+
         projectileSpeed = Math.max(0.1, r.nextDouble());
         projectileLength = r.nextInt(100) + 40;
+        this.level = level;
     }
 
     private Color randomColor() {
@@ -258,7 +257,17 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
                 state = SpaceObjectState.DEAD;
             }
         }
+    }
 
+    private void createGift() {
+        int giftType = r.nextInt(6) + 1;
+        if (giftType > 4) {
+            gift = new Life();
+        } else if (giftType > 2) {
+            gift = new Gold(r.nextInt(100) + 200);
+        } else {
+            gift = new MissilePack();
+        }
     }
 
     @Override
@@ -269,6 +278,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
 
     @Override
     public SpaceObject createGiftAfterDying() {
+        createGift();
         gift.setBounds(
                 absCent.x - gift.getComponentWidth() / 2,
                 absCent.y - gift.getComponentHeight() / 2,

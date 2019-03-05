@@ -39,9 +39,10 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
     private final int nrOfExtraCircles;
     private final boolean[] isFilledCircle;
     private final Color[] extraCircleColors;
-    private final Gift gift;
+    private Gift gift;
     private int repeatNr = 0;
     private Timer t;
+    private final int level;
 
     private final int explodedDiameter;
     private final int maxRepeatNr = 75;//15
@@ -56,18 +57,17 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
                 new Pair<>(Gold.class.getName(), 80),
                 new Pair<>(Life.class.getName(), 10),
                 new Pair<>(MissilePack.class.getName(), 10)));
-        
+
         giftsPerLevel.put(2, new RandomProvider(
                 new Pair<>(Gold.class.getName(), 60),
                 new Pair<>(Life.class.getName(), 20),
                 new Pair<>(MissilePack.class.getName(), 20)));
-        
+
         giftsPerLevel.put(3, new RandomProvider(
                 new Pair<>(Gold.class.getName(), 40),
                 new Pair<>(Life.class.getName(), 30),
                 new Pair<>(MissilePack.class.getName(), 30)));
-        
-        
+
         giftsPerLevel.put(4, new RandomProvider(
                 new Pair<>(Gold.class.getName(), 20),
                 new Pair<>(Life.class.getName(), 40),
@@ -97,16 +97,8 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
         for (int i = 0; i < this.nrOfExtraCircles; i++) {
             this.extraCircleColors[i] = randomColor();
         }
-        RandomProvider rp = giftsPerLevel.get(level);
-        gift = (Gift) rp.getRandomObject();
-//        int giftType = r.nextInt(10) + 1;
-//        if (giftType > 9) {
-//            gift = new MissilePack();
-//        } else if (giftType > 6) {
-//            gift = new Life();
-//        } else {
-//            gift = new Gold();
-//        }
+        this.level = level;
+
     }
 
     private Color randomColor() {
@@ -248,6 +240,8 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
 
     @Override
     public SpaceObject createGiftAfterDying() {
+        RandomProvider rp = giftsPerLevel.get(level);
+        gift = (Gift) rp.getRandomObject();
         Point center = getAbsoluteCenter();
         gift.setBounds(
                 center.x - gift.getComponentWidth() / 2,
