@@ -72,11 +72,12 @@ public class GrowShrinkPlanetTest {
      */
     @Test
     public void testMove() {
-        GrowShrinkPlanet gp = new GrowShrinkPlanet();
+        GrowShrinkPlanet gp = new GrowShrinkPlanet(1);
         int x = 200;
         int y = 100;
         gp.setBounds(x, y, gp.getComponentWidth(), gp.getComponentHeight());
         Point absoluteCenter = gp.getAbsoluteCenter();
+        System.out.println("absoluteCenter: " + absoluteCenter);
         for (int i = 0; i < 100; i++) {
             gp.move();
             Point actAbsoluteCenter = gp.getAbsoluteCenter();
@@ -84,14 +85,26 @@ public class GrowShrinkPlanetTest {
             assertNotEquals(x, gp.getBounds().x);
             x = actAbsoluteCenter.x;
         }
+    }
+
+    @Test
+    public void testMove2() {
+        GrowShrinkPlanet gp = new GrowShrinkPlanet(1);
+        int x = 200;
+        int y = 100;
+        gp.setBounds(x, y, gp.getComponentWidth(), gp.getComponentHeight());
+        Point absoluteCenter = gp.getAbsoluteCenter();
+        System.out.println("absoluteCenter: " + absoluteCenter);
+
         Point centerBeforeAgonoizing = gp.getAbsoluteCenter();
+        System.out.println("centerBeforeAgonoizing: " + centerBeforeAgonoizing);
         gp.setState(SpaceObjectState.AGOZNIZING);
         for (int i = 0; i < 100; i++) {
+
+            gp.move();
             if (gp.getState().equals(SpaceObjectState.AGOZNIZING)) {
-                gp.move();
                 Point actAbsoluteCenter = gp.getAbsoluteCenter();
                 assertEquals(centerBeforeAgonoizing, actAbsoluteCenter);
-                x = actAbsoluteCenter.x;
             }
         }
     }
