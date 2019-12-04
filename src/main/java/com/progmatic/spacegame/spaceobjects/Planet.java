@@ -54,24 +54,24 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
 
     static {
         giftsPerLevel.put(1, new RandomProvider(
-                new Pair<>(Gold.class.getName(), 80),
-                new Pair<>(Life.class.getName(), 10),
-                new Pair<>(MissilePack.class.getName(), 10)));
+                new Pair<>(Gold.class, 80),
+                new Pair<>(Life.class, 10),
+                new Pair<>(MissilePack.class, 10)));
 
         giftsPerLevel.put(2, new RandomProvider(
-                new Pair<>(Gold.class.getName(), 60),
-                new Pair<>(Life.class.getName(), 20),
-                new Pair<>(MissilePack.class.getName(), 20)));
+                new Pair<>(Gold.class, 60),
+                new Pair<>(Life.class, 20),
+                new Pair<>(MissilePack.class, 20)));
 
         giftsPerLevel.put(3, new RandomProvider(
-                new Pair<>(Gold.class.getName(), 40),
-                new Pair<>(Life.class.getName(), 30),
-                new Pair<>(MissilePack.class.getName(), 30)));
+                new Pair<>(Gold.class, 40),
+                new Pair<>(Life.class, 30),
+                new Pair<>(MissilePack.class, 30)));
 
         giftsPerLevel.put(4, new RandomProvider(
-                new Pair<>(Gold.class.getName(), 20),
-                new Pair<>(Life.class.getName(), 40),
-                new Pair<>(MissilePack.class.getName(), 40)));
+                new Pair<>(Gold.class, 20),
+                new Pair<>(Life.class, 40),
+                new Pair<>(MissilePack.class, 40)));
     }
 
     public Planet(int level) {

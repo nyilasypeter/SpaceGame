@@ -54,12 +54,10 @@ public class MainGameFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
-        //setSize(800, 600);
         getContentPane().setBackground(Color.DARK_GRAY);
 
         //no layout manager is used, because we want to use absolute positioning
         setLayout(null);
-        //pack();
 
     }
 

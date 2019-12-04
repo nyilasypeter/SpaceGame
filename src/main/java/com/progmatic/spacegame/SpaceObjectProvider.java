@@ -36,21 +36,21 @@ public class SpaceObjectProvider {
 
     static {
         spaceObjectsPerLevel.put(1, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 100)));
+                new Pair<>(Planet.class, 100)));
         nrOfSpaceObjectsPerLevel.put(1, 5);
 
         spaceObjectsPerLevel.put(2, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 100)));
+                new Pair<>(Planet.class, 100)));
         nrOfSpaceObjectsPerLevel.put(2, 5);
 
         spaceObjectsPerLevel.put(3, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 82),
-                new Pair<>(GrowShrinkPlanet.class.getName(), 18)));
+                new Pair<>(Planet.class, 82),
+                new Pair<>(GrowShrinkPlanet.class, 18)));
         nrOfSpaceObjectsPerLevel.put(3, 6);
 
         spaceObjectsPerLevel.put(4, new RandomProvider(
-                new Pair<>(Planet.class.getName(), 70),
-                new Pair<>(GrowShrinkPlanet.class.getName(), 30)));
+                new Pair<>(Planet.class, 70),
+                new Pair<>(GrowShrinkPlanet.class, 30)));
         nrOfSpaceObjectsPerLevel.put(4, 6);
 
     }
@@ -84,10 +84,10 @@ public class SpaceObjectProvider {
 
     private SpaceObject createSpaceObject() {
         RandomProvider rp = spaceObjectsPerLevel.get(level);
-        String className = rp.getRandomString();
-        if (Planet.class.getName().equals(className)) {
+        Class className = rp.getRandomString();
+        if (Planet.class.equals(className)) {
             return createRandomPlanet();
-        } else if (GrowShrinkPlanet.class.getName().equals(className)) {
+        } else if (GrowShrinkPlanet.class.equals(className)) {
             return createRandomGrowShrinkPlanet();
         } else {
             throw new RuntimeException("unknown spaceobject returned by RandomProvider.getRandomString(): " + className);

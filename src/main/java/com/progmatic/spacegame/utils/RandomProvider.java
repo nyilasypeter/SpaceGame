@@ -14,29 +14,38 @@ import javafx.util.Pair;
 
 /**
  *
+ * RandomProvider can create objects randomly but with a given probability.
+ * E.g. if we intitialize the provider this way
+ * RandomProvider rp = new RandomProvider(
+ *                 new Pair<>(Circle.class, 82),
+ *                 new Pair<>(Rectangle.class, 18)));
+ * then
+ * rp.getRandomObject() will return either a Circle object (with 82% probability)
+ * or a Rectangle object (with 18% probability)
  * @author peti
+ *
  */
 public class RandomProvider {
 
-    Pair<String, Integer>[] randomPairs;
+    Pair<Class, Integer>[] randomPairs;
     Random r = new Random();
 
-    public RandomProvider(Pair<String, Integer>... randomPairs) {
+    public RandomProvider(Pair<Class, Integer>... randomPairs) {
         int sum = 0;
-        for (Pair<String, Integer> randomPair : randomPairs) {
+        for (Pair<Class, Integer> randomPair : randomPairs) {
             sum += randomPair.getValue();
         }
         if (sum != 100) {
-            throw new RuntimeException("Sum of values must be 100 int RandomProvider's constructor");
+            throw new RuntimeException("Sum of values must be 100 in RandomProvider's constructor");
         }
         this.randomPairs = randomPairs;
         Arrays.sort(this.randomPairs, Comparator.comparing(p -> p.getValue()));
     }
 
-    public String getRandomString() {
+    public Class getRandomString() {
         int rand = r.nextInt(100) + 1;
         int sum = 0;
-        for (Pair<String, Integer> pair : randomPairs) {
+        for (Pair<Class, Integer> pair : randomPairs) {
             sum += pair.getValue();
             if (rand <= sum) {
                 return pair.getKey();
@@ -47,8 +56,8 @@ public class RandomProvider {
 
     public Object getRandomObject() {
         try {
-            String className = getRandomString();
-            return Class.forName(className).newInstance();
+            Class clazz = getRandomString();
+            return clazz.newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
