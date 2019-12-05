@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>928</x>
-      <y>40</y>
+      <x>912</x>
+      <y>64</y>
       <w>208</w>
       <h>104</h>
     </coordinates>
@@ -20,8 +20,8 @@ addSapceObject(SpaceObject so)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>520</x>
-      <y>256</y>
+      <x>504</x>
+      <y>280</y>
       <w>176</w>
       <h>56</h>
     </coordinates>
@@ -36,8 +36,8 @@ int getValue()
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>160</x>
-      <y>456</y>
+      <x>144</x>
+      <y>480</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -48,8 +48,8 @@ int getValue()
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>16</x>
-      <y>40</y>
+      <x>0</x>
+      <y>64</y>
       <w>176</w>
       <h>80</h>
     </coordinates>
@@ -62,8 +62,8 @@ void beingHit(int damage)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>152</x>
-      <y>112</y>
+      <x>136</x>
+      <y>136</y>
       <w>216</w>
       <h>176</h>
     </coordinates>
@@ -73,8 +73,8 @@ void beingHit(int damage)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>16</x>
-      <y>408</y>
+      <x>0</x>
+      <y>432</y>
       <w>128</w>
       <h>104</h>
     </coordinates>
@@ -91,8 +91,8 @@ Projectile fireMissile() </panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>544</x>
-      <y>8</y>
+      <x>528</x>
+      <y>32</y>
       <w>328</w>
       <h>152</h>
     </coordinates>
@@ -113,8 +113,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>672</x>
-      <y>152</y>
+      <x>656</x>
+      <y>176</y>
       <w>24</w>
       <h>120</h>
     </coordinates>
@@ -124,8 +124,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>496</x>
-      <y>352</y>
+      <x>480</x>
+      <y>376</y>
       <w>176</w>
       <h>24</h>
     </coordinates>
@@ -136,8 +136,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>584</x>
-      <y>304</y>
+      <x>568</x>
+      <y>328</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -147,8 +147,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
-      <y>368</y>
+      <x>504</x>
+      <y>392</y>
       <w>24</w>
       <h>72</h>
     </coordinates>
@@ -158,8 +158,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>424</y>
+      <x>488</x>
+      <y>448</y>
       <w>48</w>
       <h>24</h>
     </coordinates>
@@ -170,8 +170,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>568</x>
-      <y>456</y>
+      <x>552</x>
+      <y>480</y>
       <w>48</w>
       <h>24</h>
     </coordinates>
@@ -182,8 +182,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>608</x>
-      <y>416</y>
+      <x>592</x>
+      <y>440</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -194,8 +194,8 @@ public void handleCollision() </panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>720</x>
-      <y>264</y>
+      <x>704</x>
+      <y>288</y>
       <w>176</w>
       <h>40</h>
     </coordinates>
@@ -207,8 +207,8 @@ LeftToRightSpaceObject
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>312</x>
-      <y>272</y>
+      <x>296</x>
+      <y>296</y>
       <w>176</w>
       <h>40</h>
     </coordinates>
@@ -219,8 +219,8 @@ RightToLeftSpaceObject</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>368</x>
-      <y>152</y>
+      <x>352</x>
+      <y>176</y>
       <w>288</w>
       <h>136</h>
     </coordinates>
@@ -230,8 +230,8 @@ RightToLeftSpaceObject</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>800</x>
-      <y>152</y>
+      <x>784</x>
+      <y>176</y>
       <w>24</w>
       <h>128</h>
     </coordinates>
@@ -241,8 +241,8 @@ RightToLeftSpaceObject</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>696</x>
-      <y>344</y>
+      <x>680</x>
+      <y>368</y>
       <w>152</w>
       <h>72</h>
     </coordinates>
@@ -258,8 +258,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>576</x>
-      <y>368</y>
+      <x>560</x>
+      <y>392</y>
       <w>24</w>
       <h>104</h>
     </coordinates>
@@ -269,8 +269,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>640</x>
-      <y>368</y>
+      <x>624</x>
+      <y>392</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -280,8 +280,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>768</x>
-      <y>296</y>
+      <x>752</x>
+      <y>320</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -291,8 +291,8 @@ abstract int damage();
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>656</x>
-      <y>496</y>
+      <x>640</x>
+      <y>520</y>
       <w>104</w>
       <h>24</h>
     </coordinates>
@@ -303,8 +303,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>712</x>
-      <y>408</y>
+      <x>696</x>
+      <y>432</y>
       <w>24</w>
       <h>104</h>
     </coordinates>
@@ -314,8 +314,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>776</x>
-      <y>408</y>
+      <x>760</x>
+      <y>432</y>
       <w>24</w>
       <h>72</h>
     </coordinates>
@@ -325,8 +325,8 @@ abstract int damage();
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>736</x>
-      <y>464</y>
+      <x>720</x>
+      <y>488</y>
       <w>104</w>
       <h>24</h>
     </coordinates>
@@ -337,8 +337,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>216</x>
-      <y>304</y>
+      <x>200</x>
+      <y>328</y>
       <w>128</w>
       <h>168</h>
     </coordinates>
@@ -348,8 +348,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>80</x>
-      <y>112</y>
+      <x>64</x>
+      <y>136</y>
       <w>136</w>
       <h>360</h>
     </coordinates>
@@ -359,8 +359,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>40</x>
-      <y>112</y>
+      <x>24</x>
+      <y>136</y>
       <w>24</w>
       <h>312</h>
     </coordinates>
@@ -370,8 +370,8 @@ abstract int damage();
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>56</x>
-      <y>152</y>
+      <x>40</x>
+      <y>176</y>
       <w>536</w>
       <h>272</h>
     </coordinates>
@@ -381,8 +381,8 @@ abstract int damage();
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>288</x>
-      <y>48</y>
+      <x>272</x>
+      <y>72</y>
       <w>192</w>
       <h>80</h>
     </coordinates>
@@ -395,8 +395,8 @@ List&lt;Projectile&gt; getProjectiles()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>256</x>
-      <y>456</y>
+      <x>240</x>
+      <y>480</y>
       <w>200</w>
       <h>24</h>
     </coordinates>
@@ -407,8 +407,8 @@ List&lt;Projectile&gt; getProjectiles()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>400</x>
-      <y>120</y>
+      <x>384</x>
+      <y>144</y>
       <w>24</w>
       <h>352</h>
     </coordinates>
@@ -418,8 +418,8 @@ List&lt;Projectile&gt; getProjectiles()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>360</x>
-      <y>304</y>
+      <x>344</x>
+      <y>328</y>
       <w>24</w>
       <h>168</h>
     </coordinates>
@@ -429,8 +429,8 @@ List&lt;Projectile&gt; getProjectiles()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>112</y>
+      <x>104</x>
+      <y>136</y>
       <w>176</w>
       <h>360</h>
     </coordinates>
@@ -440,8 +440,8 @@ List&lt;Projectile&gt; getProjectiles()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>864</x>
-      <y>88</y>
+      <x>848</x>
+      <y>112</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -451,8 +451,8 @@ List&lt;Projectile&gt; getProjectiles()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>952</x>
-      <y>352</y>
+      <x>936</x>
+      <y>376</y>
       <w>208</w>
       <h>48</h>
     </coordinates>
@@ -463,8 +463,8 @@ MainFrameComponentListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>912</x>
-      <y>272</y>
+      <x>896</x>
+      <y>296</y>
       <w>168</w>
       <h>40</h>
     </coordinates>
@@ -475,8 +475,8 @@ SpaceshipDirectKeyListener</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1000</x>
-      <y>136</y>
+      <x>984</x>
+      <y>160</y>
       <w>24</w>
       <h>152</h>
     </coordinates>
@@ -486,8 +486,8 @@ SpaceshipDirectKeyListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1232</x>
-      <y>48</y>
+      <x>1216</x>
+      <y>72</y>
       <w>160</w>
       <h>40</h>
     </coordinates>
@@ -498,8 +498,8 @@ GameOverMenu</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1128</x>
-      <y>56</y>
+      <x>1112</x>
+      <y>80</y>
       <w>120</w>
       <h>24</h>
     </coordinates>
@@ -509,8 +509,8 @@ GameOverMenu</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1232</x>
-      <y>96</y>
+      <x>1216</x>
+      <y>120</y>
       <w>160</w>
       <h>40</h>
     </coordinates>
@@ -521,8 +521,8 @@ InfoObject</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1232</x>
-      <y>152</y>
+      <x>1216</x>
+      <y>176</y>
       <w>160</w>
       <h>40</h>
     </coordinates>
@@ -533,8 +533,8 @@ NextLevelMenu</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1128</x>
-      <y>128</y>
+      <x>1112</x>
+      <y>152</y>
       <w>120</w>
       <h>56</h>
     </coordinates>
@@ -544,8 +544,8 @@ NextLevelMenu</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1128</x>
-      <y>104</y>
+      <x>1112</x>
+      <y>128</y>
       <w>120</w>
       <h>24</h>
     </coordinates>
@@ -555,8 +555,8 @@ NextLevelMenu</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1232</x>
-      <y>216</y>
+      <x>1216</x>
+      <y>240</y>
       <w>160</w>
       <h>72</h>
     </coordinates>
@@ -570,8 +570,8 @@ SpaceObject so2)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1232</x>
-      <y>304</y>
+      <x>1216</x>
+      <y>328</y>
       <w>160</w>
       <h>40</h>
     </coordinates>
@@ -583,8 +583,8 @@ Object getRandomObject()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1080</x>
-      <y>136</y>
+      <x>1064</x>
+      <y>160</y>
       <w>24</w>
       <h>232</h>
     </coordinates>
@@ -594,8 +594,8 @@ Object getRandomObject()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1112</x>
-      <y>136</y>
+      <x>1096</x>
+      <y>160</y>
       <w>136</w>
       <h>120</h>
     </coordinates>
@@ -606,8 +606,8 @@ uses</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1088</x>
-      <y>136</y>
+      <x>1072</x>
+      <y>160</y>
       <w>160</w>
       <h>264</h>
     </coordinates>
@@ -618,8 +618,8 @@ uses</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1232</x>
-      <y>360</y>
+      <x>1216</x>
+      <y>384</y>
       <w>160</w>
       <h>48</h>
     </coordinates>
@@ -632,13 +632,36 @@ SpaceObject replace(
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1104</x>
-      <y>136</y>
+      <x>1088</x>
+      <y>160</y>
       <w>144</w>
       <h>200</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 uses</panel_attributes>
     <additional_attributes>160.0;230.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>0</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>Game</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1000</x>
+      <y>16</y>
+      <w>56</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+starts</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>
