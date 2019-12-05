@@ -11,6 +11,7 @@ import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
+import com.progmatic.spacegame.utils.Pair;
 import com.progmatic.spacegame.utils.RandomProvider;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -23,7 +24,6 @@ import java.awt.geom.Arc2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javafx.util.Pair;
 import javax.swing.Timer;
 
 /**

@@ -8,9 +8,6 @@ package com.progmatic.spacegame.utils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.util.Pair;
 
 /**
  *

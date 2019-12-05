@@ -15,7 +15,6 @@ import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
 import com.progmatic.spacegame.spaceobjects.projectile.LeaserBeam;
 import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
-import com.progmatic.spacegame.utils.RandomProvider;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -25,11 +24,8 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import javafx.util.Pair;
 import javax.swing.Timer;
 
 /**

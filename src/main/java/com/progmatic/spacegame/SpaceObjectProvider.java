@@ -9,6 +9,7 @@ import com.progmatic.spacegame.spaceobjects.Planet;
 import com.progmatic.spacegame.spaceobjects.RightToLeftSpaceObject;
 import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkPlanet;
+import com.progmatic.spacegame.utils.Pair;
 import com.progmatic.spacegame.utils.RandomProvider;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import javafx.util.Pair;
 
 /**
  *
