@@ -14,7 +14,10 @@ import javax.swing.SwingUtilities;
 public class Game {
 
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "true");
+        System.out.println(System.getProperty("os.name"));
+        if(!System.getProperty("os.name").toLowerCase().contains("windows")){
+            System.setProperty("sun.java2d.opengl", "true");
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
