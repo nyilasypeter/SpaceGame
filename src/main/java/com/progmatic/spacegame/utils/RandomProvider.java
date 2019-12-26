@@ -7,6 +7,7 @@ package com.progmatic.spacegame.utils;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -22,27 +23,27 @@ import java.util.Random;
  * @author peti
  *
  */
-public class RandomProvider {
+public class RandomProvider<T> {
 
-    Pair<Class, Integer>[] randomPairs;
+    List<Pair<T, Integer>> randomPairs;
     Random r = new Random();
 
-    public RandomProvider(Pair<Class, Integer>... randomPairs) {
+    RandomProvider(List<Pair<T, Integer>> randomPairs) {
         int sum = 0;
-        for (Pair<Class, Integer> randomPair : randomPairs) {
+        for (Pair<T, Integer> randomPair : randomPairs) {
             sum += randomPair.getValue();
         }
         if (sum != 100) {
             throw new RuntimeException("Sum of values must be 100 in RandomProvider's constructor");
         }
         this.randomPairs = randomPairs;
-        Arrays.sort(this.randomPairs, Comparator.comparing(p -> p.getValue()));
+        this.randomPairs.sort(Comparator.comparing(p -> p.getValue()));
     }
 
-    public Class getRandomString() {
+    public T getRandomObject() {
         int rand = r.nextInt(100) + 1;
         int sum = 0;
-        for (Pair<Class, Integer> pair : randomPairs) {
+        for (Pair<T, Integer> pair : randomPairs) {
             sum += pair.getValue();
             if (rand <= sum) {
                 return pair.getKey();
@@ -51,9 +52,10 @@ public class RandomProvider {
         throw new RuntimeException("Error in getRranodmString");
     }
 
-    public Object getRandomObject() {
+    public Object instantiateRandomObject() {
+
         try {
-            Class clazz = getRandomString();
+            Class clazz = (Class) getRandomObject();
             return clazz.newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);

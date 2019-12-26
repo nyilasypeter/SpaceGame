@@ -11,8 +11,9 @@ import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Hitable;
-import com.progmatic.spacegame.utils.Pair;
 import com.progmatic.spacegame.utils.RandomProvider;
+import com.progmatic.spacegame.utils.RandomProviderBuilder;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -50,28 +51,33 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
 
     private final int planetAnimationSpeed;
 
-    private final static Map<Integer, RandomProvider> giftsPerLevel = new HashMap<>();
+    private final static Map<Integer, RandomProvider<Class>> giftsPerLevel = new HashMap<>();
 
     static {
-        giftsPerLevel.put(1, new RandomProvider(
-                new Pair<>(Gold.class, 80),
-                new Pair<>(Life.class, 10),
-                new Pair<>(MissilePack.class, 10)));
 
-        giftsPerLevel.put(2, new RandomProvider(
-                new Pair<>(Gold.class, 60),
-                new Pair<>(Life.class, 20),
-                new Pair<>(MissilePack.class, 20)));
+        giftsPerLevel.put(1, new RandomProviderBuilder<Class>()
+                .add(Gold.class, 80)
+                .add(Life.class, 10)
+                .add(MissilePack.class, 10)
+                .build());
 
-        giftsPerLevel.put(3, new RandomProvider(
-                new Pair<>(Gold.class, 40),
-                new Pair<>(Life.class, 30),
-                new Pair<>(MissilePack.class, 30)));
+        giftsPerLevel.put(2, new RandomProviderBuilder<Class>()
+                .add(Gold.class, 60)
+                .add(Life.class, 20)
+                .add(MissilePack.class, 20)
+                .build());
 
-        giftsPerLevel.put(4, new RandomProvider(
-                new Pair<>(Gold.class, 20),
-                new Pair<>(Life.class, 40),
-                new Pair<>(MissilePack.class, 40)));
+        giftsPerLevel.put(3, new RandomProviderBuilder<Class>()
+                .add(Gold.class, 40)
+                .add(Life.class, 30)
+                .add(MissilePack.class, 30)
+                .build());
+
+        giftsPerLevel.put(4, new RandomProviderBuilder<Class>()
+                .add(Gold.class, 20)
+                .add(Life.class, 40)
+                .add(MissilePack.class, 40)
+                .build());
     }
 
     public Planet(int level) {
@@ -240,8 +246,8 @@ public class Planet extends RightToLeftSpaceObject implements Hitable {
 
     @Override
     public SpaceObject createGiftAfterDying() {
-        RandomProvider rp = giftsPerLevel.get(level);
-        gift = (Gift) rp.getRandomObject();
+        RandomProvider<Class> rp = giftsPerLevel.get(level);
+        gift = (Gift) rp.instantiateRandomObject();
         Point center = getAbsoluteCenter();
         gift.setBounds(
                 center.x - gift.getComponentWidth() / 2,

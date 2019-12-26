@@ -11,6 +11,8 @@ import com.progmatic.spacegame.spaceobjects.SpaceObject;
 import com.progmatic.spacegame.spaceobjects.enemy.GrowShrinkPlanet;
 import com.progmatic.spacegame.utils.Pair;
 import com.progmatic.spacegame.utils.RandomProvider;
+import com.progmatic.spacegame.utils.RandomProviderBuilder;
+
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +21,6 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- *
  * @author peti
  */
 public class SpaceObjectProvider {
@@ -27,7 +28,7 @@ public class SpaceObjectProvider {
     private static final SpaceObjectProvider me = new SpaceObjectProvider();
     private final Random r;
     private Dimension sizeOfGameField;
-    private final static Map<Integer, RandomProvider> spaceObjectsPerLevel = new HashMap<>();
+    private final static Map<Integer, RandomProvider<Class>> spaceObjectsPerLevel = new HashMap<>();
     private final static Map<Integer, Integer> nrOfSpaceObjectsPerLevel = new HashMap<>();
     private int level = 1;
 
@@ -35,22 +36,27 @@ public class SpaceObjectProvider {
     //private static final int[] LEVEL_SCORES = {200, 400, 600, 10000};
 
     static {
-        spaceObjectsPerLevel.put(1, new RandomProvider(
-                new Pair<>(Planet.class, 100)));
+        spaceObjectsPerLevel.put(1,
+                new RandomProviderBuilder<Class>()
+                        .add(Planet.class, 100)
+                        .build());
         nrOfSpaceObjectsPerLevel.put(1, 5);
 
-        spaceObjectsPerLevel.put(2, new RandomProvider(
-                new Pair<>(Planet.class, 100)));
+        spaceObjectsPerLevel.put(2, new RandomProviderBuilder<Class>()
+                .add(Planet.class, 100)
+                .build());
         nrOfSpaceObjectsPerLevel.put(2, 5);
 
-        spaceObjectsPerLevel.put(3, new RandomProvider(
-                new Pair<>(Planet.class, 82),
-                new Pair<>(GrowShrinkPlanet.class, 18)));
+        spaceObjectsPerLevel.put(3, new RandomProviderBuilder<Class>()
+                .add(Planet.class, 82)
+                .add(GrowShrinkPlanet.class, 18)
+                .build());
         nrOfSpaceObjectsPerLevel.put(3, 6);
 
-        spaceObjectsPerLevel.put(4, new RandomProvider(
-                new Pair<>(Planet.class, 70),
-                new Pair<>(GrowShrinkPlanet.class, 30)));
+        spaceObjectsPerLevel.put(4, new RandomProviderBuilder<Class>()
+                .add(Planet.class, 70)
+                .add(GrowShrinkPlanet.class, 30)
+                .build());
         nrOfSpaceObjectsPerLevel.put(4, 6);
 
     }
@@ -83,8 +89,8 @@ public class SpaceObjectProvider {
     }
 
     private SpaceObject createSpaceObject() {
-        RandomProvider rp = spaceObjectsPerLevel.get(level);
-        Class className = rp.getRandomString();
+        RandomProvider<Class> rp = spaceObjectsPerLevel.get(level);
+        Class className = rp.getRandomObject();
         if (Planet.class.equals(className)) {
             return createRandomPlanet();
         } else if (GrowShrinkPlanet.class.equals(className)) {
