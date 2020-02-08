@@ -11,10 +11,7 @@ import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.Timer;
@@ -28,7 +25,7 @@ public class SpaceshipDirectKeyListener implements KeyListener {
     
 
     private enum ListenerState {
-        in_game, to_nextlevel, game_over;
+        in_game, to_nextlevel, game_over, game_complete;
     }
 
     private final Spaceship spaceship;
@@ -132,11 +129,8 @@ public class SpaceshipDirectKeyListener implements KeyListener {
                 gameFrame.nextLevel();
                 myState = ListenerState.in_game;
             }
-            else{
-                return;
-            }
         }
-        if(myState == ListenerState.game_over){
+        else if(myState == ListenerState.game_over){
             switch (e.getKeyCode()) {
                 case ENTER:
                     gameFrame.restart(false);
@@ -147,34 +141,51 @@ public class SpaceshipDirectKeyListener implements KeyListener {
                     myState = ListenerState.in_game;
                     break;
                 default:
-                    return;
+                    ;
             }
         }
+        else if(myState == ListenerState.game_complete){
+            switch (e.getKeyCode()) {
+                case ENTER:
+                    gameFrame.restart(true);
+                    myState = ListenerState.in_game;
+                    break;
+                case ESCAPE:
+                    gameFrame.dispatchEvent(new WindowEvent(gameFrame, WindowEvent.WINDOW_CLOSING));
+                    break;
+                default:
+                    ;
+            }
+        }
+        else{
+            gameFrame.initializeIfNeeded();
+            int keyCode = e.getKeyCode();
+            if (e.isActionKey()) {
 
-        gameFrame.initializeIfNeeded();
-        int keyCode = e.getKeyCode();
-        if (e.isActionKey()) {
+                if (arrowKeys.contains(keyCode)) {
+                    pressedNavKeys.add(keyCode);
+                    if (!spMoveTimer.isRunning()) {
+                        spMoveTimer.start();
+                    }
+                }
 
-            if (arrowKeys.contains(keyCode)) {
-                pressedNavKeys.add(keyCode);
-                if (!spMoveTimer.isRunning()) {
-                    spMoveTimer.start();
+            } else if (keyCode == SPACE || e.getKeyChar() == 's') {
+                Projectile bullet = spaceship.fireBullet();
+                gameFrame.addBullet(bullet);
+            } else if (e.getKeyChar() == 'a') {
+                Projectile missile = spaceship.fireMissile();
+                if (missile != null) {
+                    gameFrame.addBullet(missile);
                 }
             }
-
-        } else if (keyCode == SPACE || e.getKeyChar() == 's') {
-            Projectile bullet = spaceship.fireBullet();
-            gameFrame.addBullet(bullet);
-        } else if (e.getKeyChar() == 'a') {
-            Projectile missile = spaceship.fireMissile();
-            if (missile != null) {
-                gameFrame.addBullet(missile);
-            }
         }
+
+
 
     }
     private static final int SPACE = 32;
     private static final int ENTER = 10;
+    private static final int ESCAPE = 27;
 
     @Override
     public void keyReleased(KeyEvent e) {
@@ -197,6 +208,10 @@ public class SpaceshipDirectKeyListener implements KeyListener {
 
     public void setInNextLevelMenu() {
         this.myState = ListenerState.to_nextlevel;
+    }
+
+    public void setGameCompleted(){
+        this.myState = ListenerState.game_complete;
     }
     
     public void setInGameOverMenu() {

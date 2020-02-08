@@ -5,6 +5,7 @@
  */
 package com.progmatic.spacegame;
 
+import com.progmatic.spacegame.infoobjects.GameCompletedMenu;
 import com.progmatic.spacegame.infoobjects.GameOverMenu;
 import com.progmatic.spacegame.infoobjects.InfoObject;
 import com.progmatic.spacegame.infoobjects.NextLevelMenu;
@@ -39,12 +40,13 @@ public class MainGameFrame extends JFrame {
 
     private final List<SpaceObject> spaceObjects = Collections.synchronizedList(new ArrayList<>());
     private InfoObject infoObject;
-    private Timer mainAnimator;
+    private Timer    mainAnimator;
     private boolean initialized = false;
     private int actLevel = 1;
     private SpaceshipDirectKeyListener skListener;
     private NextLevelMenu nextLevMenu;
     private GameOverMenu goMenu;
+    private GameCompletedMenu gameCompletedMenu;
 
     public MainGameFrame() {
     }
@@ -174,7 +176,12 @@ public class MainGameFrame extends JFrame {
             gameOver();
         }
         if (SpaceObjectProvider.instance().getLevelByScore(sp.getScore()) > actLevel) {
-            showNextLevelMenu();
+            if(actLevel < SpaceObjectProvider.instance().getNrofLevels()) {
+                showNextLevelMenu();
+            }
+            else{
+                showGameCompletedMenu();
+            }
         }
         infoObject.repaint();
     }
@@ -196,6 +203,7 @@ public class MainGameFrame extends JFrame {
     public void restart(boolean fromBeginning){
         if(fromBeginning){
             actLevel = 1;
+            sp.setScore(0);
         }
         SpaceObjectProvider.instance().setLevel(actLevel);
         for (SpaceObject spaceObject : spaceObjects) {
@@ -204,7 +212,12 @@ public class MainGameFrame extends JFrame {
         spaceObjects.clear();
         initialized = false;
         initializeIfNeeded();
-        remove(goMenu);
+        if(goMenu != null) {
+            remove(goMenu);
+        }
+        if(gameCompletedMenu != null) {
+            remove(gameCompletedMenu);
+        }
         if(fromBeginning){ 
             sp.setLife(4);
             sp.setNrOfMissiles(4);
@@ -228,6 +241,19 @@ public class MainGameFrame extends JFrame {
                 nextLevMenu.getHeight());
         nextLevMenu.repaint();
         skListener.setInNextLevelMenu();
+    }
+
+    private void showGameCompletedMenu() {
+        mainAnimator.stop();
+        Rectangle frameBounds = getBounds();
+        gameCompletedMenu = new GameCompletedMenu();
+        add(gameCompletedMenu, 1);
+        gameCompletedMenu.setBounds(frameBounds.width / 2 - gameCompletedMenu.getWidth() / 2,
+                frameBounds.height / 2 - gameCompletedMenu.getHeight() / 2,
+                gameCompletedMenu.getWidth(),
+                gameCompletedMenu.getHeight());
+        gameCompletedMenu.repaint();
+        skListener.setGameCompleted();
     }
     
     public void nextLevel(){

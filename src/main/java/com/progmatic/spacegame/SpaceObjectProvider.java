@@ -33,7 +33,7 @@ public class SpaceObjectProvider {
     private int level = 1;
 
     private static final int[] LEVEL_SCORES = {2000, 4000, 6000, 10000};
-    //private static final int[] LEVEL_SCORES = {200, 400, 600, 10000};
+    //private static final int[] LEVEL_SCORES = {100, 200, 300, 500};
 
     static {
         spaceObjectsPerLevel.put(1,
@@ -136,6 +136,10 @@ public class SpaceObjectProvider {
             }
         }
         return LEVEL_SCORES.length + 1;
+    }
+
+    public int getNrofLevels(){
+        return spaceObjectsPerLevel.size();
     }
 
 }
