@@ -27,7 +27,6 @@ public class MainFrameComponentListener implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        System.out.println("componentResized called");
         MainGameFrame mFrame = (MainGameFrame) e.getComponent();
         Dimension size = mFrame.getSize();
         spaceshipDirectKeyListener.setMainFrameDimensions(size);

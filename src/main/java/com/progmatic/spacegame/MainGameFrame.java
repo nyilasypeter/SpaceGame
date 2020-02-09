@@ -64,7 +64,7 @@ public class MainGameFrame extends JFrame {
     }
 
     public void addSpaceShip() {
-        sp = new Spaceship();
+        sp = SpaceObjectProvider.instance().getSpaceship();
        
         sp.setBounds(100, 100, sp.getComponentWidth(), sp.getComponentHeight());
         add(sp);
@@ -172,7 +172,7 @@ public class MainGameFrame extends JFrame {
 
             }
         }
-        if (sp.getLife() == 0) {
+        if (sp.getLife() <= 0) {
             gameOver();
         }
         if (SpaceObjectProvider.instance().getLevelByScore(sp.getScore()) > actLevel) {

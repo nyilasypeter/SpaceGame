@@ -5,6 +5,7 @@
  */
 package com.progmatic.spacegame.spaceobjects;
 
+import com.progmatic.spacegame.events.SpaceshipMotionListener;
 import com.progmatic.spacegame.spaceobjects.gifts.Gift;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
@@ -19,6 +20,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Arc2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -27,19 +30,23 @@ import java.awt.geom.Arc2D;
 public class Spaceship extends SpaceObject implements Hitable {
 
     private static final Color WINDOW_COLOR_ALIVE = Color.decode("#e9f409");//#f3ff00
+    private static final Color SPACESIP_COLOR_TOP = Color.BLUE;
+    private static final Color SPACESIP_COLOR_BOTTOM = Color.RED;
     private static final Color WINDOW_COLOR_DEAD = Color.BLACK;
 
     private int life = 4;
     private int nrOfMissiles = 4;
     private int score = 0;
 
+    private List<SpaceshipMotionListener> spaceshipMotionListeners = new ArrayList<>();
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.BLUE);
+        g.setColor(SPACESIP_COLOR_TOP);
         g.fillOval(20, 0, 60, 100);
 
-        g.setColor(Color.red);
+        g.setColor(SPACESIP_COLOR_BOTTOM);
         g.fillOval(0, 30, 100, 70);
 
         g.setColor(WINDOW_COLOR_ALIVE);
@@ -52,7 +59,6 @@ public class Spaceship extends SpaceObject implements Hitable {
             windowStart += 20;
         }
 
-        //paintCircleAorundPoint(50, 50, 100, (Graphics2D) g);
         setVisible(true);
     }
 
@@ -102,7 +108,8 @@ public class Spaceship extends SpaceObject implements Hitable {
             score += g.getValue();
 
             if (g instanceof Life) {
-                this.life++;
+                Life l = (Life) g;
+                this.life += l.getLifeNum();
             } else if (g instanceof MissilePack) {
                 MissilePack mp = (MissilePack) g;
                 this.nrOfMissiles += mp.getNrOfMissiles();
@@ -156,7 +163,27 @@ public class Spaceship extends SpaceObject implements Hitable {
     public void setScore(int score) {
         this.score = score;
     }
-    
+
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        super.setBounds(x, y, width, height);
+        Rectangle r = new Rectangle(x, y, width, height);
+        for (SpaceshipMotionListener spaceshipMotionListener : spaceshipMotionListeners) {
+            spaceshipMotionListener.spaceshipMoved(r);
+        }
+    }
+
+    @Override
+    public void setBounds(Rectangle r) {
+        super.setBounds(r);
+        for (SpaceshipMotionListener spaceshipMotionListener : spaceshipMotionListeners) {
+            spaceshipMotionListener.spaceshipMoved(r);
+        }
+    }
+
+    public void addSpaceshipMotionListener(SpaceshipMotionListener spaceshipMotionListener){
+        spaceshipMotionListeners.add(spaceshipMotionListener);
+    }
 
     @Override
     public boolean isOutOfGameField(Rectangle rectangle) {
@@ -187,8 +214,6 @@ public class Spaceship extends SpaceObject implements Hitable {
         public int getLife() {
             return life;
         }
-        
-       
     }
 
 }

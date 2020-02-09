@@ -34,6 +34,18 @@ public class MissilePack extends Gift{
             height += m.getComponentHeight() + gap;
         }
     }
+
+    public MissilePack(int nrOfMissiles){
+        this.nrOfMissiles = nrOfMissiles;
+        int height = 0;
+        for (int i = 0; i < nrOfMissiles; i++) {
+            Missile m = new Missile();
+            missiles.add(m);
+            this.add(m);
+            m.setBounds(0, height, m.getComponentWidth(), m.getComponentHeight());
+            height += m.getComponentHeight() + gap;
+        }
+    }
     
     
 

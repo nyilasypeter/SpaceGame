@@ -5,10 +5,10 @@
  */
 package com.progmatic.spacegame.spaceobjects.gifts;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Shape;
+import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -17,12 +17,21 @@ import java.awt.Shape;
 public class Life extends Gift {
 
     private static final Color SUN = Color.decode("#fff716");
+    private static final Color TEXT = Color.decode("#F57900");
 
     private final int baseRadius;
     private final int raylength;
     private final int nrOfRays;
+    private int lifeNum = 1;
     
     public Life(){
+        this.baseRadius = 20;
+        this.raylength = 10;
+        this.nrOfRays = 10;
+    }
+
+    public Life(int lifeNum){
+        this.lifeNum = lifeNum;
         this.baseRadius = 20;
         this.raylength = 10;
         this.nrOfRays = 10;
@@ -55,6 +64,15 @@ public class Life extends Gift {
             fillTriangle(p1, p2, p3, g);
             actAngle += angleGrow;
         }
+
+        String text = String.valueOf(lifeNum);
+        g.setColor(TEXT);
+        Font font = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+        g.setFont(font);
+        AffineTransform affinetransform = new AffineTransform();
+        FontRenderContext frc = new FontRenderContext(affinetransform, true, true);
+        Rectangle2D stringBounds = font.getStringBounds(text, frc);
+        g.drawString(text,(int)(center.x-stringBounds.getWidth()/2),(int)(center.y+stringBounds.getHeight()/2));
 
     }
 
@@ -89,7 +107,8 @@ public class Life extends Gift {
     public int getValue() {
         return 10;
     }
-    
-    
 
+    public int getLifeNum() {
+        return lifeNum;
+    }
 }

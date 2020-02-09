@@ -258,7 +258,7 @@ public class GrowShrinkPlanet extends RightToLeftSpaceObject implements Hitable,
     private void createGift() {
         int giftType = r.nextInt(6) + 1;
         if (giftType > 4) {
-            gift = new Life();
+            gift = new Life(r.nextInt(3)+1);
         } else if (giftType > 2) {
             gift = new Gold(r.nextInt(100) + 200);
         } else {
