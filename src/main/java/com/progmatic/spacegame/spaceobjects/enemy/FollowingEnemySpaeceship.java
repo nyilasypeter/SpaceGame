@@ -10,7 +10,6 @@ import com.progmatic.spacegame.spaceobjects.gifts.Gold;
 import com.progmatic.spacegame.spaceobjects.gifts.Life;
 import com.progmatic.spacegame.spaceobjects.gifts.MissilePack;
 import com.progmatic.spacegame.spaceobjects.projectile.Projectile;
-import javafx.geometry.Bounds;
 
 import java.awt.*;
 import java.util.List;
